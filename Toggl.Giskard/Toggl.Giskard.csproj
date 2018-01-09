@@ -389,6 +389,7 @@
     <AndroidResource Include="Resources\layout\TimeEntriesLogFragmentHeader.axml" />
     <AndroidResource Include="Resources\layout\SuggestionsFragmentCard.axml" />
     <AndroidResource Include="Resources\layout\SettingsActivity.axml" />
+    <AndroidResource Include="Resources\layout\EditLayout.axml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation\Toggl.Foundation.csproj">
