@@ -4,6 +4,7 @@ using MvvmCross.Platform;
 using Foundation;
 using Toggl.Foundation.Services;
 using UIKit;
+using Toggl.Daneel.Services;
 
 namespace Toggl.Daneel
 {
@@ -11,6 +12,7 @@ namespace Toggl.Daneel
     public sealed class AppDelegate : MvxApplicationDelegate
     {
         private IBackgroundService backgroundService;
+        private ApplicationShortcutService applicationShortcutService;
 
         public override UIWindow Window { get; set; }
 
@@ -38,7 +40,8 @@ namespace Toggl.Daneel
             Google.SignIn.SignIn.SharedInstance.ClientID =
                 Firebase.Core.App.DefaultInstance.Options.ClientId;
             #endif
-            
+
+            applicationShortcutService = Mvx.IocConstruct<ApplicationShortcutService>();
 
             return true;
         }
@@ -61,6 +64,14 @@ namespace Toggl.Daneel
         {
             base.DidEnterBackground(application);
             backgroundService.EnterBackground();
+        }
+
+        public override void PerformActionForShortcutItem(
+            UIApplication application,
+            UIApplicationShortcutItem shortcutItem,
+            UIOperationHandler completionHandler)
+        {
+            applicationShortcutService.Handle(shortcutItem).Wait();
         }
     }
 }

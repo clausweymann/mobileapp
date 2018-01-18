@@ -4,6 +4,7 @@ using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.iOS.Platform;
 using MvvmCross.iOS.Views.Presenters;
+using MvvmCross.Platform;
 using MvvmCross.Platform.Platform;
 using MvvmCross.Platform.Plugins;
 using Toggl.Daneel.Presentation;
@@ -66,6 +67,8 @@ namespace Toggl.Daneel
                 environment,
                 new PlatformConstants()
             );
+
+            Mvx.RegisterSingleton((ITopViewControllerProvider)Presenter);
 
             foundation.RegisterServices(maxNumberOfSuggestions,
                                         new DialogService((ITopViewControllerProvider)Presenter),

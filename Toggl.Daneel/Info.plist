@@ -56,5 +56,16 @@
 			</array>
 		</dict>
 	</array>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeSearch</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Reports</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>Reports</string>
+		</dict>
+	</array>
 </dict>
 </plist>

@@ -724,6 +724,12 @@
     <Compile Include="Extensions\NoEntityInfoMessageExtensions.cs" />
     <Compile Include="Views\Reports\LoadingPieChartView.cs" />
     <Compile Include="PlatformConstants.cs" />
+    <Compile Include="Services\ApplicationShortcuts\IApplicationShortcutProvider.cs" />
+    <Compile Include="Services\ApplicationShortcuts\StopTimeEntryApplicationShortcutProvider.cs" />
+    <Compile Include="Services\ApplicationShortcuts\ApplicationShortcutService.cs" />
+    <Compile Include="Services\ApplicationShortcuts\IApplicationShortcutHandler.cs" />
+    <Compile Include="Services\ApplicationShortcuts\StopTimeEntryApplicationShortcutHandler.cs" />
+    <Compile Include="Services\ApplicationShortcuts\ReportsApplicationShortcutHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation.MvvmCross\Toggl.Foundation.MvvmCross.csproj">
@@ -776,6 +782,7 @@
     <Folder Include="Views\EditTimeEntry\" />
     <Folder Include="Views\EntityCreation\" />
     <Folder Include="Resources\Images.xcassets\icIllustrationTagsSmall.imageset\" />
+    <Folder Include="Services\ApplicationShortcuts\" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="GoogleService-Info.plist" />
