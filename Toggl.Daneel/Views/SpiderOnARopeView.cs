@@ -5,22 +5,26 @@ using CoreGraphics;
 using CoreMotion;
 using Foundation;
 using UIKit;
+using MvvmCross.Plugins.Color.iOS;
+using Toggl.Foundation.MvvmCross.Helper;
 
 namespace Toggl.Daneel.Views
 {
     [Register(nameof(SpiderOnARopeView))]
     public class SpiderOnARopeView : UIView
     {
+        private const double height = 155.0f;
+        private const int chainLength = 8;
+        private const double chainLinkHeight = height / chainLength;
+        private const double chainWidth = 2f;
+        private readonly CGColor RopeColor = Color.Main.SpiderNetColor.ToNativeColor().CGColor;
+
         private UIDynamicAnimator spiderAnimator;
         private UIGravityBehavior gravity;
         private CMMotionManager motionManager;
         private UIImage spiderImage;
         private UIView spiderView;
         private UIView[] links;
-        private const double height = 155.0f;
-        private const int chainLength = 8;
-        private const double chainLinkHeight = height / chainLength;
-        private const double chainWidth = 2f;
         private CGPoint anchorPoint;
 
         public SpiderOnARopeView(IntPtr handle) : base(handle)
@@ -79,7 +83,7 @@ namespace Toggl.Daneel.Views
                 AddSubview(spiderView);
             }
 
-            spiderView.Center = new CGPoint(Center.X - spiderImage.Size.Width / 5, -height - spiderImage.Size.Height);
+            spiderView.Center = new CGPoint(Center.X, -height - spiderImage.Size.Height);
             spiderView.Layer.AnchorPoint = new CGPoint(0.5, 0.1);
 
             spiderAnimator = new UIDynamicAnimator(this);

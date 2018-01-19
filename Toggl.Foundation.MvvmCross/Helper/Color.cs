@@ -42,6 +42,8 @@ namespace Toggl.Foundation.MvvmCross.Helper
         {
             private static readonly MvxColor lightGrey = new MvxColor(181, 188, 192);
 
+            public static readonly MvxColor SpiderNetColor = new MvxColor(0, 0, 0);
+
             public static readonly MvxColor CardBorder = new MvxColor(232, 232, 232);
 
             public static readonly MvxColor CurrentTimeEntryClientColor = new MvxColor(94, 91, 91);
