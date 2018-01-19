@@ -17,7 +17,7 @@ namespace Toggl.Daneel.Views
         private UIImage spiderImage;
         private UIView spiderView;
         private UIView[] links;
-        private const double height = 185.0f;
+        private const double height = 155.0f;
         private const int chainLength = 8;
         private const double chainLinkHeight = height / chainLength;
         private const double chainWidth = 2f;
