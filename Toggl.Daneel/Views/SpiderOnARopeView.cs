@@ -60,6 +60,13 @@ namespace Toggl.Daneel.Views
                 ctx.SetLineWidth((nfloat)chainWidth);
                 ctx.AddPath(path);
                 ctx.DrawPath(CGPathDrawingMode.Stroke);
+
+                // rotate the spider
+                var dx = spiderView.Center.X - anchorPoint.X;
+                var dy = spiderView.Center.Y - anchorPoint.Y;
+                var angle = (nfloat)(Math.Atan2(dy, dx) - Math.PI / 2.0);
+
+                spiderView.Transform = CGAffineTransform.Rotate(spiderView.Transform, angle);
             }
         }
 
@@ -79,7 +86,7 @@ namespace Toggl.Daneel.Views
 
             var spider = new UIDynamicItemBehavior(spiderView);
             spider.Action = () => SetNeedsDisplay();
-            spider.AllowsRotation = true;
+            spider.AllowsRotation = false;
             spider.Density = 2.0f;
             spiderAnimator.AddBehavior(spider);
 
