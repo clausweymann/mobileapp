@@ -99,6 +99,8 @@ namespace Toggl.Daneel.Views
             motionManager = new CMMotionManager();
             motionManager.StartAccelerometerUpdates(NSOperationQueue.CurrentQueue, (data, error) =>
             {
+                if (spiderView == null) return;
+
                 var ax = data.Acceleration.X;
                 var ay = data.Acceleration.Y;
                 var angle = -(nfloat)Math.Atan2(ay, ax);
@@ -114,9 +116,9 @@ namespace Toggl.Daneel.Views
 
         private void reset()
         {
-            spiderAnimator?.Dispose();
             motionManager?.Dispose();
             gravity?.Dispose();
+            spiderAnimator?.Dispose();
             spiderView?.Dispose();
 
             spiderAnimator = null;
