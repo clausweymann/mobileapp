@@ -127,9 +127,12 @@ TO SEE THE LOG</string>
                                                 <constraint firstAttribute="width" constant="16" id="fDh-CB-hSA"/>
                                             </constraints>
                                         </view>
-                                        <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekK-hW-ths" customClass="SpiderOnARopeView">
+                                        <view opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekK-hW-ths" customClass="SpiderOnARopeView">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="635"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration">
+                                                <accessibilityTraits key="traits" notEnabled="YES"/>
+                                            </accessibility>
                                         </view>
                                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tGg-Dk-cfk">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="32"/>
