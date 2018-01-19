@@ -1,6 +1,7 @@
 ﻿using System;
 using Toggl.Foundation.DataSources;
 using Toggl.Multivac;
+using Toggl.Multivac.Models;
 
 namespace Toggl.Foundation.Login
 {
@@ -17,5 +18,7 @@ namespace Toggl.Foundation.Login
         IObservable<ITogglDataSource> RefreshToken(Password password);
 
         IObservable<string> ResetPassword(Email email);
+
+        IObservable<IUser> UserLoggedIn { get; }
     }
 }

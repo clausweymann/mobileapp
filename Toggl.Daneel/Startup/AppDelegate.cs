@@ -5,6 +5,7 @@ using Foundation;
 using Toggl.Foundation.Services;
 using UIKit;
 using Toggl.Daneel.Services;
+using Toggl.Foundation.DataSources;
 
 namespace Toggl.Daneel
 {
@@ -14,12 +15,14 @@ namespace Toggl.Daneel
         private IBackgroundService backgroundService;
         private ApplicationShortcutService applicationShortcutService;
 
+        private bool forceTouchAvailable;
+
         public override UIWindow Window { get; set; }
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
             Window = new UIWindow(UIScreen.MainScreen.Bounds);
-
+            
             var setup = new Setup(this, Window);
             setup.Initialize();
 
@@ -32,16 +35,19 @@ namespace Toggl.Daneel
 
             #if ENABLE_TEST_CLOUD
             Xamarin.Calabash.Start();
-            #endif
+#endif
 
-            #if USE_ANALYTICS
+#if USE_ANALYTICS
             Firebase.Core.App.Configure();
             Firebase.CrashReporting.Loader.ForceLoad();
             Google.SignIn.SignIn.SharedInstance.ClientID =
                 Firebase.Core.App.DefaultInstance.Options.ClientId;
-            #endif
+#endif
 
-            applicationShortcutService = Mvx.IocConstruct<ApplicationShortcutService>();
+            forceTouchAvailable = Window.TraitCollection.ForceTouchCapability == UIForceTouchCapability.Available;
+
+            if (forceTouchAvailable && Mvx.CanResolve<ITogglDataSource>())
+                applicationShortcutService = Mvx.IocConstruct<ApplicationShortcutService>();
 
             return true;
         }
@@ -71,7 +77,8 @@ namespace Toggl.Daneel
             UIApplicationShortcutItem shortcutItem,
             UIOperationHandler completionHandler)
         {
-            applicationShortcutService.Handle(shortcutItem).Wait();
+            if (forceTouchAvailable)
+                applicationShortcutService.Handle(shortcutItem).Wait();
         }
     }
 }

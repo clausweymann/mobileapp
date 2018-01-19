@@ -280,4 +280,13 @@ time entries with # tags.</value>
     <data name="Help">
         <value>Help</value>
     </data>
+    <data name="AppShortcutStart">
+        <value>Start time entry</value>
+    </data>
+    <data name="AppShortcutStop">
+        <value>Stop time entry</value>
+    </data>
+    <data name="AppShortcutReports">
+        <value>Reports</value>
+    </data>
 </root>

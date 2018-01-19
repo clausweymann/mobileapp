@@ -27,5 +27,24 @@ namespace Toggl.Multivac.Extensions
 
         public static IEnumerable<T> SelectNonNulls<T>(this IEnumerable<Nullable<T>> self) where T : struct
             => self.Where(nullable => nullable.HasValue).Select(nullable => nullable.Value);
+
+        public static TResult MaxFor<TResult, TCompared>(this IEnumerable<TResult> self, Func<TResult, TCompared> selector)
+            where TCompared : IComparable
+        {
+            var maxResult = self.First();
+            var maxCompared = selector(maxResult);
+            
+            foreach (var item in self)
+            {
+                var currentCompared = selector(item);
+                if (currentCompared.CompareTo(maxCompared) > 0)
+                {
+                    maxResult = item;
+                    maxCompared = currentCompared;
+                }
+            }
+
+            return maxResult;
+        }
     }
 }

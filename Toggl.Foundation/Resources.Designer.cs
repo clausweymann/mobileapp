@@ -562,5 +562,23 @@ namespace Toggl.Foundation {
                 return ResourceManager.GetString("Help", resourceCulture);
             }
         }
+        
+        public static string AppShortcutStart {
+            get {
+                return ResourceManager.GetString("AppShortcutStart", resourceCulture);
+            }
+        }
+        
+        public static string AppShortcutStop {
+            get {
+                return ResourceManager.GetString("AppShortcutStop", resourceCulture);
+            }
+        }
+        
+        public static string AppShortcutReports {
+            get {
+                return ResourceManager.GetString("AppShortcutReports", resourceCulture);
+            }
+        }
     }
 }

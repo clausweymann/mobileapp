@@ -730,6 +730,12 @@
     <Compile Include="Services\ApplicationShortcuts\IApplicationShortcutHandler.cs" />
     <Compile Include="Services\ApplicationShortcuts\StopTimeEntryApplicationShortcutHandler.cs" />
     <Compile Include="Services\ApplicationShortcuts\ReportsApplicationShortcutHandler.cs" />
+    <Compile Include="Services\ApplicationShortcuts\TimeEntrySuggestionsApplicationShortcutProvider.cs" />
+    <Compile Include="Services\ApplicationShortcuts\TimeEntrySuggestionsApplicationShortcutHandler.cs" />
+    <Compile Include="Extensions\SuggestionExtensions.cs" />
+    <Compile Include="Services\ApplicationShortcuts\Suggestion.cs" />
+    <Compile Include="Services\ApplicationShortcuts\ShortcutCollection.cs" />
+    <Compile Include="Services\ApplicationShortcuts\ReportsApplicationShortcutProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation.MvvmCross\Toggl.Foundation.MvvmCross.csproj">

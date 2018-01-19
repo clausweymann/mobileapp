@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Models;
 using Toggl.Multivac;
@@ -18,6 +20,9 @@ namespace Toggl.Foundation.Login
         private readonly IGoogleService googleService;
         private readonly IAccessRestrictionStorage accessRestrictionStorage;
         private readonly Func<ITogglApi, ITogglDataSource> createDataSource;
+        private readonly Subject<IUser> userLoggedInSubject = new Subject<IUser>();
+
+        public IObservable<IUser> UserLoggedIn { get; }
 
         public LoginManager(
             IApiFactory apiFactory,
@@ -37,6 +42,8 @@ namespace Toggl.Foundation.Login
             this.accessRestrictionStorage = accessRestrictionStorage;
             this.googleService = googleService;
             this.createDataSource = createDataSource;
+
+            UserLoggedIn = userLoggedInSubject.AsObservable();
         }
 
         public IObservable<ITogglDataSource> Login(Email email, Password password)
@@ -65,6 +72,7 @@ namespace Toggl.Foundation.Login
                 .SelectMany(api => api.User.GetWithGoogle())
                 .Select(User.Clean)
                 .SelectMany(database.User.Create)
+                .Do(user => userLoggedInSubject.OnNext(user))
                 .Select(dataSourceFromUser);
 
         public IObservable<ITogglDataSource> SignUp(Email email, Password password)
@@ -79,6 +87,7 @@ namespace Toggl.Foundation.Login
                     .SelectMany(_ => apiFactory.CreateApiWith(Credentials.None).User.SignUp(email, password))
                     .Select(User.Clean)
                     .SelectMany(database.User.Create)
+                    .Do(user => userLoggedInSubject.OnNext(user))
                     .Select(dataSourceFromUser);
         }
 
@@ -89,6 +98,7 @@ namespace Toggl.Foundation.Login
                 .SelectMany(apiFactory.CreateApiWith(Credentials.None).User.SignUpWithGoogle)
                 .Select(User.Clean)
                 .SelectMany(database.User.Create)
+                .Do(user => userLoggedInSubject.OnNext(user))
                 .Select(dataSourceFromUser);
 
         public IObservable<string> ResetPassword(Email email)

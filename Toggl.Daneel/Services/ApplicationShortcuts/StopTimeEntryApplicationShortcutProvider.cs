@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Toggl.Foundation;
 using Toggl.Foundation.DataSources;
 using Toggl.Multivac;
@@ -14,17 +12,16 @@ namespace Toggl.Daneel.Services.ApplicationShortcuts
 {
     public class StopTimeEntryApplicationShortcutProvider : IApplicationShortcutProvider
     {
-        private readonly ITogglDataSource dataSource;
-        private readonly ITimeService timeService;
-
-        private readonly UIApplicationShortcutIcon icon = UIApplicationShortcutIcon.FromType(UIApplicationShortcutIconType.Pause);
+        private readonly UIApplicationShortcutIcon icon
+            = UIApplicationShortcutIcon.FromType(UIApplicationShortcutIconType.Pause);
 
         //TODO: com.toggl.daneel.stopTimeEntry ?
-        public string ShortcutType { get; } = "StopTimeEntry";
+        public string ShortcutType { get; } = nameof(StopTimeEntryApplicationShortcutProvider);
 
-        private Subject<IEnumerable<UIApplicationShortcutItem>> shortcutsSubject
-            = new Subject<IEnumerable<UIApplicationShortcutItem>>();
-        public IObservable<IEnumerable<UIApplicationShortcutItem>> Shortcuts { get; }
+        private Subject<ShortcutCollection> shortcutsSubject
+            = new Subject<ShortcutCollection>();
+
+        public IObservable<ShortcutCollection> Shortcuts { get; }
 
         public IApplicationShortcutHandler Handler { get; }
 
@@ -36,9 +33,6 @@ namespace Toggl.Daneel.Services.ApplicationShortcuts
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
             Ensure.Argument.IsNotNull(timeService, nameof(timeService));
 
-            this.dataSource = dataSource;
-            this.timeService = timeService;
-
             Shortcuts = shortcutsSubject.AsObservable();
             Handler = new StopTimeEntryApplicationShortcutHandler(dataSource, timeService);
 
@@ -46,13 +40,15 @@ namespace Toggl.Daneel.Services.ApplicationShortcuts
                 .TimeEntries
                 .CurrentlyRunningTimeEntry
                 .Subscribe(onCurrentlyRunningTimeEntry);
+
+            Foundation.Login.ILoginManager l;
         }
 
         private void onCurrentlyRunningTimeEntry(IDatabaseTimeEntry timeEntry)
         {
             if (timeEntry == null)
             {
-                shortcutsSubject.OnNext(null);
+                shortcutsSubject.OnNext(new ShortcutCollection(ShortcutType, null));
                 return;
             }
 
@@ -61,16 +57,13 @@ namespace Toggl.Daneel.Services.ApplicationShortcuts
             {
                 var shortcut = new UIApplicationShortcutItem(
                     ShortcutType,
-                    "Stop the fucking entry",
+                    Resources.AppShortcutStop,
                     $"{timeEntry.Description} {timeEntry.Project?.Name}",
                     icon,
                     null
                 );
-                shortcutsSubject.OnNext(new[] { shortcut });
+                shortcutsSubject.OnNext(new ShortcutCollection(ShortcutType, new[] { shortcut }));
             });
         }
-
-        public async Task Handle(UIApplicationShortcutItem shortcut)
-            => await dataSource.TimeEntries.Stop(timeService.CurrentDateTime);
     }
 }

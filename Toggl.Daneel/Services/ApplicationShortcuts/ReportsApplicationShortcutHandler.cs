@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using MvvmCross.Core.Navigation;
 using Toggl.Daneel.ViewControllers;
-using Toggl.Daneel.ViewControllers.Navigation;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Multivac;

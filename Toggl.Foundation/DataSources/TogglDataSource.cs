@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.Reports;
 using Toggl.Foundation.Services;
@@ -20,6 +21,8 @@ namespace Toggl.Foundation.DataSources
         private readonly IBackgroundService backgroundService;
 
         private readonly TimeSpan minimumTimeInBackgroundForFullSync;
+
+        private readonly Subject<Unit> userLoggedOutSubject = new Subject<Unit>();
 
         private IDisposable errorHandlingDisposable;
         private IDisposable signalDisposable;
@@ -59,6 +62,8 @@ namespace Toggl.Foundation.DataSources
             AutocompleteProvider = new AutocompleteProvider(database);
             SyncManager = createSyncManager(this);
 
+            UserLoggedOut = userLoggedOutSubject.AsObservable();
+
             ReportsProvider = new ReportsProvider(api, database);
 
             errorHandlingDisposable = SyncManager.ProgressObservable.Subscribe(onSyncError);
@@ -77,6 +82,8 @@ namespace Toggl.Foundation.DataSources
         public IAutocompleteProvider AutocompleteProvider { get; }
 
         public IReportsProvider ReportsProvider { get; }
+
+        public IObservable<Unit> UserLoggedOut { get; }
 
         public IObservable<Unit> StartSyncing()
         {
@@ -111,6 +118,7 @@ namespace Toggl.Foundation.DataSources
                 .Do(_ => isLoggedIn = false)
                 .Do(_ => stopSyncingOnSignal())
                 .SelectMany(_ => database.Clear())
+                .Do(_ => userLoggedOutSubject.OnNext(Unit.Default))
                 .FirstAsync();
 
         private IObservable<bool> hasUnsyncedData<TModel>(IRepository<TModel> repository)

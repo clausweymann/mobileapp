@@ -117,6 +117,8 @@ namespace Toggl.Foundation.MvvmCross
 
         public static void Initialize(this FoundationMvvmCross self, App app, IScheduler scheduler)
         {
+            Mvx.RegisterSingleton(self.Database);
+
             Func<ITogglDataSource, ISyncManager> createSyncManager(ITogglApi api) => dataSource =>
                 TogglSyncManager.CreateSyncManager(self.Database, api, dataSource, self.TimeService, retryDelayLimit, scheduler);
 

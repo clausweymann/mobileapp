@@ -25,5 +25,6 @@ namespace Toggl.Foundation.DataSources
         IObservable<bool> HasUnsyncedData();
 
         IObservable<Unit> Logout();
+        IObservable<Unit> UserLoggedOut { get; }
     }
 }

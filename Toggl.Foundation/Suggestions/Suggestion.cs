@@ -1,8 +1,9 @@
-﻿using Toggl.PrimeRadiant.Models;
+﻿using Toggl.Foundation.Suggestions.Interfaces;
+using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.Foundation.Suggestions
 {
-    public sealed class Suggestion
+    public sealed class Suggestion : ISuggestion
     {
         public string Description { get; } = "";
 
