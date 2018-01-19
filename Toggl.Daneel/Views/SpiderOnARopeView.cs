@@ -17,7 +17,7 @@ namespace Toggl.Daneel.Views
         private const int chainLength = 8;
         private const double chainLinkHeight = height / chainLength;
         private const double chainWidth = 2f;
-        private readonly CGColor RopeColor = Color.Main.SpiderNetColor.ToNativeColor().CGColor;
+        private readonly CGColor ropeColor = Color.Main.SpiderNetColor.ToNativeColor().CGColor;
 
         private UIDynamicAnimator spiderAnimator;
         private UIGravityBehavior gravity;
@@ -42,15 +42,7 @@ namespace Toggl.Daneel.Views
         {
             base.Dispose(disposing);
 
-            spiderAnimator?.Dispose();
-            motionManager?.Dispose();
-            gravity?.Dispose();
-            spiderView?.Dispose();
-
-            spiderAnimator = null;
-            motionManager = null;
-            gravity = null;
-            spiderView = null;
+            reset();
         }
 
         public override void Draw(CGRect rect)
@@ -64,7 +56,7 @@ namespace Toggl.Daneel.Views
             {
                 var points = links.Select(links => links.Center).ToArray();
                 var path = createCurvedPath(anchorPoint, points);
-                ctx.SetStrokeColor(UIColor.Black.CGColor);
+                ctx.SetStrokeColor(ropeColor);
                 ctx.SetLineWidth((nfloat)chainWidth);
                 ctx.AddPath(path);
                 ctx.DrawPath(CGPathDrawingMode.Stroke);
@@ -77,11 +69,8 @@ namespace Toggl.Daneel.Views
             reset();
             anchorPoint = new CGPoint(Center.X, 0);
 
-            if (spiderView == null)
-            {
-                spiderView = new UIImageView(spiderImage);
-                AddSubview(spiderView);
-            }
+            spiderView = new UIImageView(spiderImage);
+            AddSubview(spiderView);
 
             spiderView.Center = new CGPoint(Center.X, -height - spiderImage.Size.Height);
             spiderView.Layer.AnchorPoint = new CGPoint(0.5, 0.1);
@@ -121,6 +110,13 @@ namespace Toggl.Daneel.Views
             spiderAnimator?.Dispose();
             motionManager?.Dispose();
             gravity?.Dispose();
+            spiderView?.Dispose();
+
+            spiderAnimator = null;
+            motionManager = null;
+            gravity = null;
+            spiderView = null;
+
             for (var i = 0; i < Subviews.Length; i++)
             {
                 Subviews[i].RemoveFromSuperview();
