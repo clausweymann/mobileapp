@@ -68,7 +68,7 @@ namespace Toggl.Daneel.ViewControllers
                       .To(vm => vm.EditTimeEntryCommand);
 
             //Visibility
-            bindingSet.Bind(SpiderBroImageView)
+            bindingSet.Bind(SpiderBroView)
                       .For(v => v.BindVisibility())
                       .To(vm => vm.SpiderIsVisible)
                       .WithConversion(visibilityConverter);
@@ -129,6 +129,18 @@ namespace Toggl.Daneel.ViewControllers
                 new UIBarButtonItem(settingsButton),
                 new UIBarButtonItem(reportsButton)
             };
+
+            if (ViewModel.SpiderIsVisible)
+            {
+                SpiderBroView.Initialize();
+            }
+        }
+
+        public override void ViewDidDisappear(bool animated)
+        {
+            base.ViewWillDisappear(animated);
+
+            SpiderBroView.Dispose();
         }
 
         public override void ViewDidLayoutSubviews()
@@ -168,10 +180,6 @@ namespace Toggl.Daneel.ViewControllers
             DismissSyncBarImageView.TintColor = UIColor.White;
             DismissSyncBarImageView.Hidden = true;
             MainPagedScrollView.DismissSyncBarImageView = DismissSyncBarImageView;
-
-            //Spider animation
-            SpiderBroImageView.Layer.AnchorPoint = new CGPoint(0.5f, 0);
-            animateSpider();
 
             //Card border
             CurrentTimeEntryCard.Layer.BorderWidth = 1;
@@ -230,13 +238,7 @@ namespace Toggl.Daneel.ViewControllers
                     );
                 });
         }
-
-        private void animateSpider()
-        {
-            SpiderBroImageView.Transform = CGAffineTransform.MakeRotation(-animationAngle);
-
-            UIView.Animate(Timings.SpiderBro, 0, UIViewAnimationOptions.Autoreverse | UIViewAnimationOptions.Repeat,
-                () => SpiderBroImageView.Transform = CGAffineTransform.MakeRotation(animationAngle), animateSpider);
-        }
     }
 }
+    
+

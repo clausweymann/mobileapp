@@ -22,7 +22,7 @@
                 <outlet property="MainPagedScrollView" destination="fyC-Me-BcE" id="name-outlet-fyC-Me-BcE"/>
                 <outlet property="RunningEntryDescriptionFadeView" destination="E3W-8n-IfX" id="xWA-xE-taG"/>
                 <outlet property="ScrollViewTopConstraint" destination="HLE-W1-VGj" id="srH-AL-3u7"/>
-                <outlet property="SpiderBroImageView" destination="mpU-UI-dLB" id="name-outlet-mpU-UI-dLB"/>
+                <outlet property="SpiderBroView" destination="ekK-hW-ths" id="RbC-GO-OKH"/>
                 <outlet property="SpiderHinge" destination="FPj-ki-Fw8" id="name-outlet-FPj-ki-Fw8"/>
                 <outlet property="StartTimeEntryButton" destination="4Kk-Hz-RBS" id="name-outlet-4Kk-Hz-RBS"/>
                 <outlet property="StopTimeEntryButton" destination="Ddo-IW-xE3" id="name-outlet-Ddo-IW-xE3"/>
@@ -119,13 +119,6 @@ TO SEE THE LOG</string>
                                                 <constraint firstAttribute="width" constant="2" id="idT-K9-PUV"/>
                                             </constraints>
                                         </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icIllustrationSpider" translatesAutoresizingMaskIntoConstraints="NO" id="mpU-UI-dLB">
-                                            <rect key="frame" x="155.5" y="-102" width="60" height="205"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="60" id="OFT-Lr-yz0"/>
-                                                <constraint firstAttribute="height" constant="205" id="sSY-Bb-Ekc"/>
-                                            </constraints>
-                                        </imageView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FPj-ki-Fw8" userLabel="SpiderHinge">
                                             <rect key="frame" x="179" y="0.0" width="16" height="2"/>
                                             <color key="backgroundColor" red="0.19607843137254902" green="0.19607843137254902" blue="0.19607843137254902" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -133,6 +126,10 @@ TO SEE THE LOG</string>
                                                 <constraint firstAttribute="height" constant="2" id="1LC-Qf-8sp"/>
                                                 <constraint firstAttribute="width" constant="16" id="fDh-CB-hSA"/>
                                             </constraints>
+                                        </view>
+                                        <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekK-hW-ths" customClass="SpiderOnARopeView">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="635"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </view>
                                         <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tGg-Dk-cfk">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="32"/>
@@ -152,8 +149,6 @@ TO SEE THE LOG</string>
                                         <constraint firstItem="Btr-Pq-4yV" firstAttribute="centerX" secondItem="EzU-Pd-V8e" secondAttribute="centerX" id="LbQ-df-e2t"/>
                                         <constraint firstAttribute="bottom" secondItem="LV7-Bw-hnV" secondAttribute="bottom" id="MCj-Yu-VUE"/>
                                         <constraint firstItem="5K9-cC-7E8" firstAttribute="top" secondItem="EzU-Pd-V8e" secondAttribute="top" constant="1" id="Mwt-ub-HhA"/>
-                                        <constraint firstItem="mpU-UI-dLB" firstAttribute="top" secondItem="EzU-Pd-V8e" secondAttribute="top" constant="-102" id="Wd6-Ev-wuH"/>
-                                        <constraint firstItem="mpU-UI-dLB" firstAttribute="centerX" secondItem="EzU-Pd-V8e" secondAttribute="centerX" constant="-2" id="aUE-VX-PjY"/>
                                         <constraint firstItem="tGg-Dk-cfk" firstAttribute="top" secondItem="EzU-Pd-V8e" secondAttribute="top" id="ceS-NM-2xh"/>
                                         <constraint firstItem="LV7-Bw-hnV" firstAttribute="centerX" secondItem="EzU-Pd-V8e" secondAttribute="centerX" id="fWo-Ty-Iln"/>
                                         <constraint firstItem="FPj-ki-Fw8" firstAttribute="centerX" secondItem="EzU-Pd-V8e" secondAttribute="centerX" id="fZK-nd-GjM"/>
@@ -314,7 +309,6 @@ TO SEE THE LOG</string>
         <image name="ActivityIndicatorView" width="16" height="16"/>
         <image name="icArrowUp" width="10" height="6"/>
         <image name="icClose" width="10" height="10"/>
-        <image name="icIllustrationSpider" width="60" height="205"/>
         <image name="line" width="2" height="14"/>
         <image name="playIcon" width="50" height="50"/>
         <image name="stopIcon" width="34" height="34"/>

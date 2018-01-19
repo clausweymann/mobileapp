@@ -46,7 +46,7 @@ namespace Toggl.Daneel.ViewControllers
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIKit.UIImageView SpiderBroImageView { get; set; }
+		Toggl.Daneel.Views.SpiderOnARopeView SpiderBroView { get; set; }
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
@@ -131,9 +131,9 @@ namespace Toggl.Daneel.ViewControllers
 				ScrollViewTopConstraint = null;
 			}
 
-			if (SpiderBroImageView != null) {
-				SpiderBroImageView.Dispose ();
-				SpiderBroImageView = null;
+			if (SpiderBroView != null) {
+				SpiderBroView.Dispose ();
+				SpiderBroView = null;
 			}
 
 			if (SpiderHinge != null) {
