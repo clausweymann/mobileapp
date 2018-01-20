@@ -47,6 +47,11 @@ namespace Toggl.Daneel
                 view => new ScrollViewCurrentPageTargetBinding(view)
             );
 
+            registry.RegisterCustomBindingFactory<SpiderOnARopeView>(
+                SpiderOnARopeViewIsVisibleTargetBinding.BindingName,
+                view => new SpiderOnARopeViewIsVisibleTargetBinding(view)
+            );
+
             registry.RegisterCustomBindingFactory<UISwitch>(
                 SwitchAnimatedOnTargetBinding.BindingName,
                 view => new SwitchAnimatedOnTargetBinding(view)

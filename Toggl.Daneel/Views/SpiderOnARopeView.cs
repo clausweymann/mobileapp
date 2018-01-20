@@ -27,6 +27,8 @@ namespace Toggl.Daneel.Views
         private UIView[] links;
         private CGPoint anchorPoint;
 
+        public bool IsVisible { get; private set; }
+
         public SpiderOnARopeView(IntPtr handle) : base(handle)
         {
         }
@@ -52,7 +54,7 @@ namespace Toggl.Daneel.Views
             var ctx = UIGraphics.GetCurrentContext();
             if (ctx == null) return;
 
-            if (links != null)
+            if (links != null && IsVisible == true)
             {
                 var points = links.Select(links => links.Center).ToArray();
                 var path = createCurvedPath(anchorPoint, points);
@@ -70,7 +72,7 @@ namespace Toggl.Daneel.Views
             }
         }
 
-        public void Initialize()
+        public void Show()
         {
             BackgroundColor = UIColor.Clear;
             reset();
@@ -112,6 +114,13 @@ namespace Toggl.Daneel.Views
                 force.SetAngleAndMagnitude(angle, magnitude);
                 spiderAnimator.AddBehavior(force);
             });
+
+            IsVisible = true;
+        }
+
+        public void Hide()
+        {
+            reset();
         }
 
         private void reset()
@@ -130,6 +139,8 @@ namespace Toggl.Daneel.Views
             {
                 Subviews[i].RemoveFromSuperview();
             }
+
+            IsVisible = false;
         }
 
         private UIView[] createRope()

@@ -69,9 +69,8 @@ namespace Toggl.Daneel.ViewControllers
 
             //Visibility
             bindingSet.Bind(SpiderBroView)
-                      .For(v => v.BindVisibility())
-                      .To(vm => vm.SpiderIsVisible)
-                      .WithConversion(visibilityConverter);
+                      .For(v => v.BindSpiderVisibility())
+                      .To(vm => vm.SpiderIsVisible);
 
             bindingSet.Bind(SpiderHinge)
                      .For(v => v.BindVisibility())
@@ -129,11 +128,6 @@ namespace Toggl.Daneel.ViewControllers
                 new UIBarButtonItem(settingsButton),
                 new UIBarButtonItem(reportsButton)
             };
-
-            if (ViewModel.SpiderIsVisible)
-            {
-                SpiderBroView.Initialize();
-            }
         }
 
         public override void ViewDidDisappear(bool animated)
