@@ -128,6 +128,11 @@ namespace Toggl.Daneel.ViewControllers
                 new UIBarButtonItem(settingsButton),
                 new UIBarButtonItem(reportsButton)
             };
+
+            if (ViewModel.SpiderIsVisible)
+            {
+                SpiderBroView.Show();
+            }
         }
 
         public override void ViewDidDisappear(bool animated)

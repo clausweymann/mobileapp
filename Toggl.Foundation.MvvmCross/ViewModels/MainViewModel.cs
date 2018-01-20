@@ -48,7 +48,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         [DependsOn(nameof(SyncingProgress))]
         public bool ShowSyncIndicator => SyncingProgress == SyncProgress.Syncing;
 
-        public bool SpiderIsVisible { get; set; } = true;
+        public bool SpiderIsVisible { get; set; } = false;
 
         public IMvxAsyncCommand StartTimeEntryCommand { get; }
 
