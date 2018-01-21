@@ -134,7 +134,7 @@ namespace Toggl.Daneel.Views
 
             if (spiderView == null) return;
 
-            var spiderTouchRadius = spiderImage.Size.Width / 2f;
+            var spiderTouchRadius = spiderImage.Size.Width;
             var spiderTouchRadiusSq = spiderTouchRadius * spiderTouchRadius;
             foreach (UITouch touch in touches)
             {
