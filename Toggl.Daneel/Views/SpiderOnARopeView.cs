@@ -40,6 +40,16 @@ namespace Toggl.Daneel.Views
             spiderImage = UIImage.FromBundle("icJustSpider");
         }
 
+        public override void LayoutSubviews()
+        {
+            base.LayoutSubviews();
+
+            if (anchorPoint.X != Center.X)
+            {
+                Show();
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -74,7 +84,6 @@ namespace Toggl.Daneel.Views
 
         public void Show()
         {
-            BackgroundColor = UIColor.Clear;
             reset();
             anchorPoint = new CGPoint(Center.X, 0);
 
@@ -82,7 +91,7 @@ namespace Toggl.Daneel.Views
             AddSubview(spiderView);
 
             spiderView.Center = new CGPoint(Center.X, -height - spiderImage.Size.Height);
-            spiderView.Layer.AnchorPoint = new CGPoint(0.5, 0.1);
+            spiderView.Layer.AnchorPoint = new CGPoint(0.5, 0);
 
             spiderAnimator = new UIDynamicAnimator(this);
 
