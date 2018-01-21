@@ -97,9 +97,7 @@ namespace Toggl.Daneel.Views
 
             var spider = new UIDynamicItemBehavior(spiderView);
             spider.Action = () => SetNeedsDisplay();
-            spider.AllowsRotation = false;
-            spider.Density = 2.0f;
-            spider.Resistance = 0.6f;
+            spider.Resistance = 0.75f;
             spiderAnimator.AddBehavior(spider);
 
             links = createRope();
