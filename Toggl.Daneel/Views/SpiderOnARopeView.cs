@@ -116,13 +116,8 @@ namespace Toggl.Daneel.Views
                 var ax = data.Acceleration.X;
                 var ay = data.Acceleration.Y;
                 var angle = -(nfloat)Math.Atan2(ay, ax);
-                var magnitude = 4 * (nfloat)(Math.Sqrt(ax * ax + ay * ay) / height);
 
                 gravity.Angle = angle;
-
-                var force = new UIPushBehavior(UIPushBehaviorMode.Instantaneous, spiderView);
-                force.SetAngleAndMagnitude(angle, magnitude);
-                spiderAnimator.AddBehavior(force);
             });
 
             IsVisible = true;
