@@ -124,6 +124,32 @@ namespace Toggl.Daneel.Views
             reset();
         }
 
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            base.TouchesBegan(touches, evt);
+
+            if (spiderView == null) return;
+
+            var spiderTouchRadius = spiderImage.Size.Width / 2f;
+            var spiderTouchRadiusSq = spiderTouchRadius * spiderTouchRadius;
+            foreach (UITouch touch in touches)
+            {
+                var position = touch.LocationInView(this);
+                var dx = position.X - spiderView.Center.X;
+                var dy = position.Y - spiderView.Center.Y;
+                var distanceSq = dx * dx + dy * dy;
+                if (distanceSq < spiderTouchRadiusSq)
+                {
+                    var force = new UIPushBehavior(UIPushBehaviorMode.Instantaneous, spiderView);
+                    var direction = new CGVector(spiderView.Center.X - position.X, spiderView.Center.Y - position.Y);
+                    force.PushDirection = direction;
+                    force.Magnitude = touch.Force;
+                    spiderAnimator.AddBehavior(force);
+                    break;
+                }
+            }
+        }
+
         private void reset()
         {
             motionManager?.Dispose();
