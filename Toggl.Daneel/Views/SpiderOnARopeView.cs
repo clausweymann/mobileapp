@@ -13,10 +13,12 @@ namespace Toggl.Daneel.Views
     [Register(nameof(SpiderOnARopeView))]
     public class SpiderOnARopeView : UIView
     {
-        private const double height = 155.0f;
+        private const double height = 155.0;
         private const int chainLength = 8;
         private const double chainLinkHeight = height / chainLength;
-        private const double chainWidth = 2f;
+        private const double chainWidth = 2;
+        private const float spiderResistance = 0.75f;
+        private const float spiderAttachmentLength = 1;
         private readonly CGColor ropeColor = Color.Main.SpiderNetColor.ToNativeColor().CGColor;
 
         private UIDynamicAnimator spiderAnimator;
@@ -66,19 +68,8 @@ namespace Toggl.Daneel.Views
 
             if (links != null && IsVisible == true)
             {
-                var points = links.Select(links => links.Center).ToArray();
-                var path = createCurvedPath(anchorPoint, points);
-                ctx.SetStrokeColor(ropeColor);
-                ctx.SetLineWidth((nfloat)chainWidth);
-                ctx.AddPath(path);
-                ctx.DrawPath(CGPathDrawingMode.Stroke);
-
-                // rotate the spider
-                var dx = spiderView.Center.X - anchorPoint.X;
-                var dy = spiderView.Center.Y - anchorPoint.Y;
-                var angle = (nfloat)(Math.Atan2(dy, dx) - Math.PI / 2.0);
-
-                spiderView.Transform = CGAffineTransform.Rotate(spiderView.Transform, angle);
+                drawTheRope(ctx);
+                rotateTheSpider();
             }
         }
 
@@ -90,33 +81,7 @@ namespace Toggl.Daneel.Views
             spiderView = new UIImageView(spiderImage);
             AddSubview(spiderView);
 
-            spiderView.Center = new CGPoint(Center.X, -height - spiderImage.Size.Height);
-            spiderView.Layer.AnchorPoint = new CGPoint(0.5, 0);
-
-            spiderAnimator = new UIDynamicAnimator(this);
-
-            var spider = new UIDynamicItemBehavior(spiderView);
-            spider.Action = () => SetNeedsDisplay();
-            spider.Resistance = 0.75f;
-            spiderAnimator.AddBehavior(spider);
-
-            links = createRope();
-
-            gravity = new UIGravityBehavior(links);
-            spiderAnimator.AddBehavior(gravity);
-
-            motionManager?.Dispose();
-            motionManager = new CMMotionManager();
-            motionManager.StartAccelerometerUpdates(NSOperationQueue.CurrentQueue, (data, error) =>
-            {
-                if (spiderView == null) return;
-
-                var ax = data.Acceleration.X;
-                var ay = data.Acceleration.Y;
-                var angle = -(nfloat)Math.Atan2(ay, ax);
-
-                gravity.Angle = angle;
-            });
+            preparePhysics();
 
             IsVisible = true;
         }
@@ -172,6 +137,28 @@ namespace Toggl.Daneel.Views
             IsVisible = false;
         }
 
+        private void preparePhysics()
+        {
+            spiderView.Center = new CGPoint(Center.X, -height - spiderImage.Size.Height);
+            spiderView.Layer.AnchorPoint = new CGPoint(0.5, 0);
+
+            spiderAnimator = new UIDynamicAnimator(this);
+
+            var spider = new UIDynamicItemBehavior(spiderView);
+            spider.Action = () => SetNeedsDisplay();
+            spider.Resistance = spiderResistance;
+            spiderAnimator.AddBehavior(spider);
+
+            links = createRope();
+
+            gravity = new UIGravityBehavior(links);
+            spiderAnimator.AddBehavior(gravity);
+
+            motionManager?.Dispose();
+            motionManager = new CMMotionManager();
+            motionManager.StartAccelerometerUpdates(NSOperationQueue.CurrentQueue, processAccelerometerData);
+        }
+
         private UIView[] createRope()
         {
             var chain = new List<UIView>();
@@ -185,7 +172,7 @@ namespace Toggl.Daneel.Views
             }
 
             var spiderAttachment = new UIAttachmentBehavior(spiderView, UIOffset.Zero, lastLink, UIOffset.Zero);
-            spiderAttachment.Length = 1f;
+            spiderAttachment.Length = spiderAttachmentLength;
             spiderAnimator.AddBehavior(spiderAttachment);
 
             chain.Add(spiderView);
@@ -213,32 +200,69 @@ namespace Toggl.Daneel.Views
             return chainLink;
         }
 
+        private void drawTheRope(CGContext ctx)
+        {
+            var points = links.Select(links => links.Center).ToArray();
+            var path = createCurvedPath(anchorPoint, points);
+            ctx.SetStrokeColor(ropeColor);
+            ctx.SetLineWidth((nfloat)chainWidth);
+            ctx.AddPath(path);
+            ctx.DrawPath(CGPathDrawingMode.Stroke);
+        }
+
+        private void rotateTheSpider()
+        {
+            // rotate the spider so it is perpendicular to a line
+            // defined by its position and the anchor point
+            var dx = spiderView.Center.X - anchorPoint.X;
+            var dy = spiderView.Center.Y - anchorPoint.Y;
+            var angle = (nfloat)(Math.Atan2(dy, dx) - Math.PI / 2.0);
+            spiderView.Transform = CGAffineTransform.Rotate(spiderView.Transform, angle);
+        }
+
         private CGPath createCurvedPath(CGPoint anchor, CGPoint[] points)
         {
             var path = new UIBezierPath();
 
             if (points.Length > 1)
             {
-                var a = points[0];
-                var b = a;
+                var previousPoint = points[0];
+                var startOfCurve = previousPoint;
                 path.MoveTo(anchor);
 
                 for (int i = 1; i < points.Length; i++)
                 {
-                    var c = points[i];
-                    var d = i < points.Length - 1 ? points[i + 1] : points[i];
+                    var endOfCurve = points[i];
+                    var nextPoint = i < points.Length - 1 ? points[i + 1] : points[i];
+                    var (controlPointB, controlPointC) = calculateControlPoints(previousPoint, startOfCurve, endOfCurve, nextPoint);
+                    path.AddCurveToPoint(endOfCurve, controlPointB, controlPointC);
 
-                    var cpb = new CGPoint((-1.0 / 6.0 * a.X) + b.X + (1.0 / 6.0 * c.X), (-1.0 / 6.0 * a.Y) + b.Y + (1.0 / 6.0 * c.Y));
-                    var cpc = new CGPoint((1.0 / 6.0 * b.X) + c.X + (-1.0 / 6.0 * d.X), (1.0 / 6.0 * b.Y) + c.Y + (-1.0 / 6.0 * d.Y));
-
-                    path.AddCurveToPoint(c, cpb, cpc);
-
-                    a = b;
-                    b = c;
+                    previousPoint = startOfCurve;
+                    startOfCurve = endOfCurve;
                 }
             }
 
             return path.CGPath;
         }
+
+        private void processAccelerometerData(CMAccelerometerData data, NSError error)
+        {
+            if (spiderView == null) return;
+
+            var ax = data.Acceleration.X;
+            var ay = data.Acceleration.Y;
+            var angle = -(nfloat)Math.Atan2(ay, ax);
+
+            gravity.Angle = angle;
+        }
+
+        // Catmull-Rom to Cubic Bezier conversion matrix:
+        // |   0       1       0       0  |
+        // | -1/6      1      1/6      0  |
+        // |   0      1/6      1     -1/6 |
+        // |   0       0       1       0  |
+        private (CGPoint, CGPoint) calculateControlPoints(CGPoint a, CGPoint b, CGPoint c, CGPoint d)
+            => (new CGPoint((-1.0 / 6.0 * a.X) + b.X + (1.0 / 6.0 * c.X), (-1.0 / 6.0 * a.Y) + b.Y + (1.0 / 6.0 * c.Y)),
+                new CGPoint((1.0 / 6.0 * b.X) + c.X + (-1.0 / 6.0 * d.X), (1.0 / 6.0 * b.Y) + c.Y + (-1.0 / 6.0 * d.Y)));
     }
 }
