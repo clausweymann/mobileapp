@@ -24,6 +24,8 @@ namespace Toggl.Daneel.Views
         private UIDynamicAnimator spiderAnimator;
         private UIGravityBehavior gravity;
         private CMMotionManager motionManager;
+        private CMAcceleration? previousAcceleration;
+
         private UIImage spiderImage;
         private UIView spiderView;
         private UIView[] links;
@@ -107,11 +109,8 @@ namespace Toggl.Daneel.Views
                 var distanceSq = dx * dx + dy * dy;
                 if (distanceSq < spiderTouchRadiusSq)
                 {
-                    var force = new UIPushBehavior(UIPushBehaviorMode.Instantaneous, spiderView);
-                    var direction = new CGVector(spiderView.Center.X - position.X, spiderView.Center.Y - position.Y);
-                    force.PushDirection = direction;
-                    force.Magnitude = touch.Force;
-                    spiderAnimator.AddBehavior(force);
+                    var direction = new CGVector(anchorPoint.X - spiderView.Center.X, anchorPoint.Y - spiderView.Center.Y);
+                    applyForce(direction, touch.Force);
                     break;
                 }
             }
@@ -254,6 +253,29 @@ namespace Toggl.Daneel.Views
             var angle = -(nfloat)Math.Atan2(ay, ax);
 
             gravity.Angle = angle;
+
+            if (previousAcceleration.HasValue)
+            {
+                var dx = (nfloat)(ax - previousAcceleration.Value.X);
+                var dy = (nfloat)(ay - previousAcceleration.Value.Y);
+
+                var direction = new CGVector(dx, dy);
+                var magnitude = (nfloat)Math.Sqrt(dx * dx + dy * dy);
+                if (magnitude > 0.25f)
+                {
+                    applyForce(direction, magnitude);
+                }
+            }
+
+            previousAcceleration = data.Acceleration;
+        }
+
+        private void applyForce(CGVector direction, nfloat magnitude)
+        {
+            var force = new UIPushBehavior(UIPushBehaviorMode.Instantaneous, spiderView);
+            force.PushDirection = direction;
+            force.Magnitude = magnitude;
+            spiderAnimator.AddBehavior(force);
         }
 
         // Catmull-Rom to Cubic Bezier conversion matrix:
