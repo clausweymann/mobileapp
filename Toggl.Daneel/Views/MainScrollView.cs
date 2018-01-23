@@ -24,6 +24,9 @@ namespace Toggl.Daneel.Views
         private readonly UIColor offlineColor = Color.Main.Offline.ToNativeColor();
         private readonly UIColor syncCompletedColor = Color.Main.SyncCompleted.ToNativeColor();
 
+        private UIImpactFeedbackGenerator feedbackGenerator;
+        private bool feedbackIsAvailable;
+
         private SyncProgress syncProgress;
         private bool needsRefresh;
         private bool shouldCalculateOnDeceleration;
@@ -62,6 +65,9 @@ namespace Toggl.Daneel.Views
             DraggingEnded += onDragEnded;
             DecelerationEnded += onDecelerationEnded;
             ShouldScrollToTop = shouldScrollToTop;
+
+            feedbackGenerator = new UIImpactFeedbackGenerator(UIImpactFeedbackStyle.Light);
+            feedbackIsAvailable = true;
         }
 
         protected override void Dispose(bool disposing)
@@ -72,6 +78,9 @@ namespace Toggl.Daneel.Views
             Scrolled -= onScrolled;
             DraggingEnded -= onDragEnded;
             DecelerationEnded -= onDecelerationEnded;
+
+            feedbackGenerator.Dispose();
+            feedbackGenerator = null;
         }
 
         private void onScrolled(object sender, EventArgs e)
@@ -82,9 +91,20 @@ namespace Toggl.Daneel.Views
             if (offset >= 0) return;
 
             var needsMorePulling = Math.Abs(offset) < scrollThreshold;
+            var shouldGenerateFeedback = feedbackIsAvailable && needsRefresh == false && needsMorePulling == false;
             needsRefresh = !needsMorePulling;
 
             if (isSyncing) return;
+
+            if (shouldGenerateFeedback)
+            {
+                feedbackGenerator.ImpactOccurred();
+                feedbackIsAvailable = false;
+            }
+            else if (feedbackIsAvailable)
+            {
+                feedbackGenerator.Prepare();
+            }
 
             DismissSyncBarImageView.Hidden = true;
             setSyncIndicatorTextAndBackground(
@@ -94,6 +114,8 @@ namespace Toggl.Daneel.Views
 
         private void onDragEnded(object sender, DraggingEventArgs e)
         {
+            feedbackIsAvailable = true;
+
             var offset = ContentOffset.Y;
             if (offset >= 0) return;
 
