@@ -46,7 +46,7 @@ namespace Toggl.Daneel.Views
         {
             base.LayoutSubviews();
 
-            if (anchorPoint.X != Center.X)
+            if (IsVisible && anchorPoint.X != Center.X)
             {
                 Show();
             }
