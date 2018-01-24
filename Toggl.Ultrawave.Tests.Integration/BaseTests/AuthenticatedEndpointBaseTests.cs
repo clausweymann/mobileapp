@@ -2,6 +2,7 @@
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
 using Toggl.Ultrawave.Exceptions;
 using Toggl.Ultrawave.Network;
@@ -43,7 +44,8 @@ namespace Toggl.Ultrawave.Tests.Integration.BaseTests
             var (validApi, _) = await SetupTestUser();
             ValidApi = validApi;
             var email = $"non-existing-email-{Guid.NewGuid()}@ironicmocks.toggl.com".ToEmail();
-            var wrongCredentials = Credentials.WithPassword(email, "123456789");
+            var wrongCredentials = Credentials
+                .WithPassword(email, "123456789".ToPassword());
 
             CallingEndpointWith(TogglApiWith(wrongCredentials)).ShouldThrow<UnauthorizedException>();
         }
@@ -53,7 +55,8 @@ namespace Toggl.Ultrawave.Tests.Integration.BaseTests
         {
             var (email, password) = await User.CreateEmailPassword();
             var correctCredentials = Credentials.WithPassword(email, password);
-            var wrongCredentials = Credentials.WithPassword(email, $"{password}1");
+            var incorrectPassword = Password.From($"{password}111");
+            var wrongCredentials = Credentials.WithPassword(email, incorrectPassword);
             ValidApi = TogglApiWith(correctCredentials);
 
             CallingEndpointWith(TogglApiWith(wrongCredentials)).ShouldThrow<UnauthorizedException>();

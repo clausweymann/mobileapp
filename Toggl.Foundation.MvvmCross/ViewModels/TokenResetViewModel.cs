@@ -3,7 +3,6 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
-using MvvmCross.Platform;
 using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Login;
 using Toggl.Foundation.MvvmCross.Services;
@@ -22,15 +21,15 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private bool needsSync;
 
-        public string Email { get; private set; }
+        public Email Email { get; private set; }
 
-        public string Password { get; set; }
+        public Password Password { get; set; }
 
         public string Error { get; set; }
 
         public bool IsPasswordMasked { get; private set; } = true;
 
-        public bool NextIsEnabled => !string.IsNullOrEmpty(Password) && !IsLoading;
+        public bool NextIsEnabled => Password.IsValid && !IsLoading;
 
         public bool HasError => !string.IsNullOrEmpty(Error);
 
@@ -103,7 +102,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private void onDataSource(ITogglDataSource newDataSource)
         {
-            newDataSource.SyncManager.ForceFullSync();
+            newDataSource.StartSyncing();
 
             IsLoading = false;
 

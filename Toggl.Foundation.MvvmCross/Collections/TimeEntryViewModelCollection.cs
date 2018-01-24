@@ -4,10 +4,10 @@ using System.Linq;
 using MvvmCross.Core.ViewModels;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Multivac;
-using Toggl.Multivac.Extensions;
 
 namespace Toggl.Foundation.MvvmCross.Collections
 {
+    [Preserve(AllMembers = true)]
     public sealed class TimeEntryViewModelCollection : MvxObservableCollection<TimeEntryViewModel>
     {
         public DateTimeOffset Date { get; }

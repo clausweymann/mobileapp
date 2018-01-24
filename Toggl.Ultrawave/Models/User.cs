@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Toggl.Multivac;
 using Toggl.Multivac.Models;
+using Toggl.Ultrawave.Serialization.Converters;
 
 namespace Toggl.Ultrawave.Models
 {
@@ -13,7 +14,8 @@ namespace Toggl.Ultrawave.Models
         
         public long DefaultWorkspaceId { get; set; }
 
-        public string Email { get; set; }
+        [JsonConverter(typeof(EmailConverter))]
+        public Email Email { get; set; }
 
         public string Fullname { get; set; }
 

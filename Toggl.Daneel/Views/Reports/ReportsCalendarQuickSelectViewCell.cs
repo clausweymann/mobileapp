@@ -12,8 +12,11 @@ namespace Toggl.Daneel.Views.Reports
 {
     public sealed partial class ReportsCalendarQuickSelectViewCell : MvxCollectionViewCell
     {
+
         public static readonly NSString Key = new NSString(nameof(ReportsCalendarQuickSelectViewCell));
         public static readonly UINib Nib;
+
+        public static UIFont Font { get; } = UIFont.SystemFontOfSize(13, UIFontWeight.Medium);
 
         static ReportsCalendarQuickSelectViewCell()
         {
@@ -29,6 +32,8 @@ namespace Toggl.Daneel.Views.Reports
         public override void AwakeFromNib()
         {
             base.AwakeFromNib();
+
+            TitleLabel.Font = Font;
 
             this.DelayBind(() =>
             {
@@ -59,17 +64,6 @@ namespace Toggl.Daneel.Views.Reports
 
                 bindingSet.Apply();
             });
-        }
-
-        public override UICollectionViewLayoutAttributes PreferredLayoutAttributesFittingAttributes(UICollectionViewLayoutAttributes layoutAttributes)
-        {
-            SetNeedsLayout();
-            LayoutIfNeeded();
-            var size = ContentView.SystemLayoutSizeFittingSize(layoutAttributes.Size);
-            var newFrame = layoutAttributes.Frame;
-            newFrame.Size = size;
-            layoutAttributes.Frame = newFrame;
-            return layoutAttributes;
         }
     }
 }

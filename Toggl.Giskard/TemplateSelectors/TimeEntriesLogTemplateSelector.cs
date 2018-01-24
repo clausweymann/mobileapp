@@ -5,23 +5,30 @@ namespace Toggl.Giskard.TemplateSelectors
 {
     public sealed class TimeEntriesLogTemplateSelector : IMvxTemplateSelector
     {
-        private const int header = 0;
-        private const int item = 1;
+        public const int Header = 0;
+        public const int Item = 1;
+        public const int Footer = 2;
 
         public int GetItemLayoutId(int fromViewType)
         {
-            if (fromViewType == header)
+            if (fromViewType == Header)
                 return Resource.Layout.TimeEntriesLogFragmentHeader;
+
+            if (fromViewType == Footer)
+                return Resource.Layout.TimeEntriesLogFragmentFooter;
 
             return Resource.Layout.TimeEntriesLogFragmentCell;
         }
 
         public int GetItemViewType(object forItemObject)
         {
-            if (forItemObject is TimeEntryViewModelCollection)
-                return header;
+            if (forItemObject == null)
+                return Footer;
 
-            return item;
+            if (forItemObject is TimeEntryViewModelCollection)
+                return Header;
+
+            return Item;
         }
     }
 }

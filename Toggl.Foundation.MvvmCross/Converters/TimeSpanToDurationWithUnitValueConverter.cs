@@ -2,9 +2,11 @@
 using System.Globalization;
 using System.Text;
 using MvvmCross.Platform.Converters;
+using Toggl.Multivac;
 
 namespace Toggl.Foundation.MvvmCross.Converters
 {
+    [Preserve(AllMembers = true)]
     public sealed class TimeSpanToDurationWithUnitValueConverter : MvxValueConverter<TimeSpan, string>
     {
         protected override string Convert(TimeSpan value, Type targetType, object parameter, CultureInfo culture)

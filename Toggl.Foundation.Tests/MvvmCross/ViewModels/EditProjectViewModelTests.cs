@@ -31,7 +31,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
 
             protected override EditProjectViewModel CreateViewModel()
-                => new EditProjectViewModel(DataSource, NavigationService);
+                => new EditProjectViewModel(DataSource, DialogService, NavigationService);
         }
 
         public abstract class EditProjectWithSpecificNameViewModelTest : EditProjectViewModelTest
@@ -139,14 +139,15 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         public sealed class TheConstructor : EditProjectViewModelTest
         {
             [Theory, LogIfTooSlow]
-            [ClassData(typeof(TwoParameterConstructorTestData))]
-            public void ThrowsIfAnyOfTheArgumentsIsNull(bool useDataSource, bool useNavigationService)
+            [ClassData(typeof(ThreeParameterConstructorTestData))]
+            public void ThrowsIfAnyOfTheArgumentsIsNull(bool useDataSource, bool useDialogService, bool useNavigationService)
             {
                 var dataSource = useDataSource ? DataSource : null;
+                var dialogService = useDialogService ? DialogService : null;
                 var navigationService = useNavigationService ? NavigationService : null;
 
                 Action tryingToConstructWithEmptyParameters =
-                    () => new EditProjectViewModel(dataSource, navigationService);
+                    () => new EditProjectViewModel(dataSource, dialogService, navigationService);
 
                 tryingToConstructWithEmptyParameters
                     .ShouldThrow<ArgumentNullException>();
@@ -496,6 +497,96 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 await DataSource.Projects.Received().Create(
                     Arg.Is<CreateProjectDTO>(dto => dto.Name == trimmed)
                 );
+            }
+
+            public sealed class WhenCreatingProjectInAnotherWorkspace : EditProjectViewModelTest
+            {
+                private const long defaultWorkspaceId = 101;
+                private const long selectedWorkspaceId = 102;
+
+                private void prepare()
+                {
+                    var defaultWorkspace = Substitute.For<IDatabaseWorkspace>();
+                    defaultWorkspace.Id.Returns(defaultWorkspaceId);
+                    var selectedWorkspace = Substitute.For<IDatabaseWorkspace>();
+                    selectedWorkspace.Id.Returns(selectedWorkspaceId);
+                    DataSource.Workspaces.GetDefault().Returns(Observable.Return(defaultWorkspace));
+                    NavigationService
+                       .Navigate<SelectWorkspaceViewModel, WorkspaceParameters, long>(Arg.Any<WorkspaceParameters>())
+                       .Returns(Task.FromResult(selectedWorkspaceId));
+                    ViewModel.Prepare("Some project");
+                    ViewModel.Initialize().Wait();
+                    ViewModel.PickWorkspaceCommand.ExecuteAsync().Wait();
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task AsksUserForConfirmationIfWorkspaceHasChanged()
+                {
+                    prepare();
+
+                    await ViewModel.DoneCommand.ExecuteAsync();
+
+                    await DialogService.Received().Confirm(
+                        Arg.Is(Resources.WorkspaceChangedAlertTitle),
+                        Arg.Is(Resources.WorkspaceChangedAlertMessage),
+                        Arg.Is(Resources.Ok),
+                        Arg.Is(Resources.Cancel)
+                    );
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task DoesNothingIfUserCancels()
+                {
+                    prepare();
+                    DialogService
+                        .Confirm(
+                            Arg.Is(Resources.WorkspaceChangedAlertTitle),
+                            Arg.Is(Resources.WorkspaceChangedAlertMessage),
+                            Arg.Is(Resources.Ok),
+                            Arg.Is(Resources.Cancel))
+                        .Returns(Task.FromResult(false));
+
+                    await ViewModel.DoneCommand.ExecuteAsync();
+
+                    await DataSource.Projects.DidNotReceive().Create(Arg.Any<CreateProjectDTO>());
+                    await NavigationService.DidNotReceive().Close(Arg.Is(ViewModel), Arg.Any<long>());
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task CreatesProjectInTheSelectedWorkspaceIfUserConfirms()
+                {
+                    prepare();
+                    DialogService
+                        .Confirm(
+                            Arg.Is(Resources.WorkspaceChangedAlertTitle),
+                            Arg.Is(Resources.WorkspaceChangedAlertMessage),
+                            Arg.Is(Resources.Ok),
+                            Arg.Is(Resources.Cancel))
+                        .Returns(Task.FromResult(true));
+
+                    await ViewModel.DoneCommand.ExecuteAsync();
+
+                    await DataSource.Projects.Received().Create(
+                        Arg.Is<CreateProjectDTO>(
+                            dto => dto.WorkspaceId == selectedWorkspaceId));
+                }
+
+                [Fact, LogIfTooSlow]
+                public async Task ClosesTheViewModelIfUserConfirms()
+                {
+                    prepare();
+                    DialogService
+                        .Confirm(
+                            Arg.Is(Resources.WorkspaceChangedAlertTitle),
+                            Arg.Is(Resources.WorkspaceChangedAlertMessage),
+                            Arg.Is(Resources.Ok),
+                            Arg.Is(Resources.Cancel))
+                        .Returns(Task.FromResult(true));
+
+                    await ViewModel.DoneCommand.ExecuteAsync();
+
+                    await NavigationService.Received().Close(Arg.Is(ViewModel), Arg.Any<long>());
+                }
             }
         }
 

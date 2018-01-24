@@ -18,6 +18,8 @@ namespace Toggl.Daneel
 {
     public partial class Setup : MvxIosSetup
     {
+        private const int maxNumberOfSuggestions = 7;
+
         private IMvxNavigationService navigationService;
 
 #if USE_PRODUCTION_API
@@ -61,10 +63,12 @@ namespace Toggl.Daneel
                 new Database(), 
                 new TimeService(Scheduler.Default),
                 new GoogleService(),
-                environment
+                environment,
+                new PlatformConstants()
             );
 
-            foundation.RegisterServices(new DialogService((ITopViewControllerProvider)Presenter),
+            foundation.RegisterServices(maxNumberOfSuggestions,
+                                        new DialogService((ITopViewControllerProvider)Presenter),
                                         new BrowserService(), new UserDefaultsStorage(),
                                         navigationService, new OnePasswordService())
                       .RevokeNewUserIfNeeded()

@@ -10,21 +10,20 @@ namespace Toggl.Multivac
 
         private readonly string email;
 
-        public static Email Invalid { get; } = new Email();
+        public static Email Empty { get; } = new Email("");
 
-        private Email(string email) 
-            : this() => this.email = email;
-        
-        public bool IsValid
-            => !string.IsNullOrEmpty(email);
+        public bool IsValid { get; }
+
+        private Email(string email)
+        {
+            this.email = email;
+            IsValid = CheckEmailStringValidity(email);
+        }
 
         public override string ToString() => email;
 
-        public static Email FromString(string email)
-        {
-            if (!CheckEmailStringValidity(email)) return Invalid;
-            return new Email(email);
-        }
+        public static Email From(string email) => new Email(email);
+
 
         public static bool CheckEmailStringValidity(string email)
             => email != null && regex.Match(email).Length > 0;

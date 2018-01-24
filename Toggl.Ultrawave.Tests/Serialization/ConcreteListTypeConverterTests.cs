@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Toggl.Ultrawave.Serialization;
+using Toggl.Ultrawave.Serialization.Converters;
 using Xunit;
 using JsonSerializer = Toggl.Ultrawave.Serialization.JsonSerializer;
 

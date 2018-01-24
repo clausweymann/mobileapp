@@ -243,4 +243,51 @@ time entries will appear here.</value>
     <data name="ThisYear">
         <value>This year</value>
     </data>
+    <data name="WorkingOnThis">
+        <value>Working on this?</value>
+    </data>
+    <data name="WorkingOnThese">
+        <value>Working on these?</value>
+    </data>
+    <data name="Of">
+        <value>Of</value>
+    </data>
+    <data name="NoTagsInfoMessage">
+        <value>Add keywords to your
+time entries with # tags.</value>
+    </data>
+    <data name="NoProjectsInfoMessage">
+        <value>Create a project @ and
+categorize your tracked time.</value>
+    </data>
+    <data name="MondayInitial">
+        <value>M</value>
+    </data>
+    <data name="TuesdayInitial">
+        <value>T</value>
+    </data>
+    <data name="WednesdayInitial">
+        <value>W</value>
+    </data>
+    <data name="ThursdayInitial">
+        <value>T</value>
+    </data>
+    <data name="FridayInitial">
+        <value>F</value>
+    </data>
+    <data name="SaturdayInitial">
+        <value>S</value>
+    </data>
+    <data name="SundayInitial">
+        <value>S</value>
+    </data>
+    <data name="Help">
+        <value>Help</value>
+    </data>
+    <data name="WorkspaceChangedAlertTitle">
+        <value>You've changed the workspace.</value>
+    </data>
+    <data name="WorkspaceChangedAlertMessage">
+        <value>Your project and time entry will be allocated under the selected workspace.</value>
+    </data>
 </root>

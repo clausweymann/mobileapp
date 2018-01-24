@@ -39,11 +39,12 @@ namespace Toggl.Foundation.Login
             this.createDataSource = createDataSource;
         }
 
-        public IObservable<ITogglDataSource> Login(Email email, string password)
+        public IObservable<ITogglDataSource> Login(Email email, Password password)
         {
             if (!email.IsValid)
-                throw new ArgumentException("A valid email must be provided when trying to Login");
-            Ensure.Argument.IsNotNullOrWhiteSpaceString(password, nameof(password));
+                throw new ArgumentException($"A valid {nameof(email)} must be provided when trying to login");
+            if (!password.IsValid)
+                throw new ArgumentException($"A valid {nameof(password)} must be provided when trying to login");
 
             var credentials = Credentials.WithPassword(email, password);
 
@@ -66,11 +67,12 @@ namespace Toggl.Foundation.Login
                 .SelectMany(database.User.Create)
                 .Select(dataSourceFromUser);
 
-        public IObservable<ITogglDataSource> SignUp(Email email, string password)
+        public IObservable<ITogglDataSource> SignUp(Email email, Password password)
         {
             if (!email.IsValid)
-                throw new ArgumentException("A valid email must be provided when trying to signup");
-            Ensure.Argument.IsNotNullOrWhiteSpaceString(password, nameof(password));
+                throw new ArgumentException($"A valid {nameof(email)} must be provided when trying to signup");
+            if (!password.IsValid)
+                throw new ArgumentException($"A valid {nameof(password)} must be provided when trying to signup");
 
             return database
                     .Clear()
@@ -92,7 +94,7 @@ namespace Toggl.Foundation.Login
         public IObservable<string> ResetPassword(Email email)
         {
             if (!email.IsValid)
-                throw new ArgumentException("A valid email must be provided when trying to reset forgotten password.");
+                throw new ArgumentException($"A valid {nameof(email)} must be provided when trying to reset forgotten password.");
 
             var api = apiFactory.CreateApiWith(Credentials.None);
             return api.User.ResetPassword(email);
@@ -105,13 +107,14 @@ namespace Toggl.Foundation.Login
                 .Catch(Observable.Return<ITogglDataSource>(null))
                 .Wait();
 
-        public IObservable<ITogglDataSource> RefreshToken(string password)
+        public IObservable<ITogglDataSource> RefreshToken(Password password)
         {
-            Ensure.Argument.IsNotNullOrWhiteSpaceString(password, nameof(password));
+            if (!password.IsValid)
+                throw new ArgumentException($"A valid {nameof(password)} must be provided when trying to refresh token");
 
             return database.User
                 .Single()
-                .Select(user => Email.FromString(user.Email))
+                .Select(user => user.Email)
                 .Select(email => Credentials.WithPassword(email, password))
                 .Select(apiFactory.CreateApiWith)
                 .SelectMany(api => api.User.Get())

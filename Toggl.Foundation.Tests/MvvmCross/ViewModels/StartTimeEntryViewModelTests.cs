@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
@@ -1400,6 +1399,70 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.TextFieldInfo = TextFieldInfo.Empty.WithTextAndCursor(text, 0);
 
                 ViewModel.DescriptionLengthExceeded.Should().BeTrue();
+            }
+        }
+
+        public sealed class TheShouldShowNoTagsInfoMessage : StartTimeEntryViewModelTest
+        {
+            [Theory, LogIfTooSlow]
+            [InlineData("")]
+            [InlineData("asd ")]
+            [InlineData("\tasd asd ")]
+            [InlineData("x")]
+            public async Task ReturnsTrueWhenSuggestingTagsAndUserHasNoTags(string query)
+            {
+                ViewModel.Prepare(DateTimeOffset.UtcNow);
+                await ViewModel.Initialize();
+                ViewModel.TextFieldInfo = TextFieldInfo
+                    .Empty
+                    .WithTextAndCursor($"{QuerySymbols.Tags}{query}", 1);
+                
+                ViewModel.ShouldShowNoTagsInfoMessage.Should().BeTrue();
+            }
+
+            [Theory, LogIfTooSlow]
+            [InlineData(1, "")]
+            [InlineData(2, "#tag")]
+            [InlineData(8, "@Project")]
+            [InlineData(3, "Time entry")]
+            [InlineData(1, "#")]
+            public async Task ReturnsFalseInAnyOtherCase(int tagCount, string query)
+            {
+                var tags = Enumerable
+                    .Range(0, tagCount)
+                    .Select(_ => Substitute.For<IDatabaseTag>());
+                DataSource.Tags.GetAll().Returns(Observable.Return(tags));
+                ViewModel.Prepare(DateTimeOffset.UtcNow);
+                await ViewModel.Initialize();
+                ViewModel.TextFieldInfo = TextFieldInfo
+                    .Empty
+                    .WithTextAndCursor(query, 1);
+
+                ViewModel.ShouldShowNoTagsInfoMessage.Should().BeFalse();
+                                     
+            }
+
+            [Theory, LogIfTooSlow]
+            [InlineData("")]
+            [InlineData("asd ")]
+            [InlineData("\tasd asd ")]
+            [InlineData("x")]
+            public async Task ReturnsFalseAfterCreatingATag(string query)
+            {
+                var tag = Substitute.For<IDatabaseTag>();
+                DataSource
+                    .Tags.Create(Arg.Any<string>(), Arg.Any<long>())
+                    .Returns(Observable.Return(tag));
+                ViewModel.Prepare(DateTimeOffset.UtcNow);
+                await ViewModel.Initialize();
+                ViewModel.TextFieldInfo = TextFieldInfo
+                    .Empty
+                    .WithWorkspace(10)
+                    .WithTextAndCursor($"{QuerySymbols.Tags}{query}", 1);
+
+                ViewModel.CreateCommand.Execute();
+
+                ViewModel.ShouldShowNoTagsInfoMessage.Should().BeFalse();
             }
         }
     }

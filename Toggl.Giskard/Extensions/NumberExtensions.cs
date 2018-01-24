@@ -1,7 +1,7 @@
 ﻿using Android.Content;
 using Android.Util;
 
-namespace Toggl.Giskard.Bindings
+namespace Toggl.Giskard.Extensions
 {
     public static class NumberExtensions
     {

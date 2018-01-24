@@ -8,7 +8,7 @@ namespace Toggl.Multivac.Models
 
         long DefaultWorkspaceId { get; }
 
-        string Email { get; }
+        Email Email { get; }
 
         string Fullname { get; }
 

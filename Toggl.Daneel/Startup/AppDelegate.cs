@@ -2,6 +2,7 @@
 using MvvmCross.iOS.Platform;
 using MvvmCross.Platform;
 using Foundation;
+using Toggl.Foundation.Services;
 using UIKit;
 
 namespace Toggl.Daneel
@@ -9,6 +10,8 @@ namespace Toggl.Daneel
     [Register("AppDelegate")]
     public sealed class AppDelegate : MvxApplicationDelegate
     {
+        private IBackgroundService backgroundService;
+
         public override UIWindow Window { get; set; }
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
@@ -17,6 +20,8 @@ namespace Toggl.Daneel
 
             var setup = new Setup(this, Window);
             setup.Initialize();
+
+            backgroundService = Mvx.Resolve<IBackgroundService>();
 
             var startup = Mvx.Resolve<IMvxAppStart>();
             startup.Start();
@@ -45,5 +50,17 @@ namespace Toggl.Daneel
             return Google.SignIn.SignIn.SharedInstance.HandleUrl(url, openUrlOptions.SourceApplication, openUrlOptions.Annotation);
         }
         #endif
+
+        public override void WillEnterForeground(UIApplication application)
+        {
+            base.WillEnterForeground(application);
+            backgroundService.EnterForeground();
+        }
+
+        public override void DidEnterBackground(UIApplication application)
+        {
+            base.DidEnterBackground(application);
+            backgroundService.EnterBackground();
+        }
     }
 }

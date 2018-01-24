@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/MainRunningTimeEntryFrame"
+    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View
+        local:MvxBind="Click EditTimeEntryCommand"
+        android:background="@android:color/white"
+        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true" />
+    <TextView
+        android:id="@+id/MainRunningTimeEntryDescription"
+        local:MvxBind="Text CurrentTimeEntryDescription"
+        tools:text="A nice description"
+        android:textSize="15sp"
+        android:singleLine="true"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/runningEntryDescription"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true" />
+    <TextView
+        android:id="@+id/MainRunningTimeEntryAddDescriptionLabel"
+        local:MvxBind="Visibility Visibility(IsAddDescriptionLabelVisible)"
+        android:text="@string/AddDescription"
+        android:textSize="15sp"
+        android:singleLine="true"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/defaultText"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true" />
+    <TextView
+        android:id="@+id/MainRunningTimeEntryTimerLabel"
+        local:MvxBind="Text CurrentTimeEntryElapsedTime"
+        tools:text="1:14:03"
+        android:textSize="20sp"
+        android:textColor="@color/runningEntryTimer"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@id/MainRunningTimeEntryDescription" />
+    <View
+        android:id="@+id/MainRunningTimeEntryProjectDot"
+        local:MvxBind="DrawableColor CurrentTimeEntryProjectColor; Visibility Visibility(HasProject)"
+        android:background="@drawable/SmallDot"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/MainRunningTimeEntryDescription" />
+    <TextView
+        android:id="@+id/MainRunningTimeEntryProjectLabel"
+        local:MvxBind="Text CurrentTimeEntryProject; TextColor ARGB(CurrentTimeEntryProjectColor); Visibility Visibility(HasProject)"
+        tools:text="Design"
+        android:maxLines="1"
+        android:textSize="15sp"
+        tools:textColor="#c56bff"
+        android:singleLine="true"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/MainRunningTimeEntryProjectDot" />
+    <TextView
+        local:MvxBind="Text CurrentTimeEntryClient; Visibility Visibility(HasProject)"
+        tools:text="Toggl"
+        android:maxLines="1"
+        android:textSize="15sp"
+        android:singleLine="true"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/clientName"
+        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/MainRunningTimeEntryProjectLabel" />
+    <View
+        android:background="@drawable/TransparentToWhiteGradient"
+        android:layout_width="144dp"
+        android:layout_height="80dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+    <View
+        android:background="@color/separator"
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="80dp"
+        android:layout_alignParentBottom="true" />
+    <View
+        android:background="@color/separator"
+        android:layout_height="0.5dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true" />
+    <ImageView
+        android:src="@drawable/TopShadow"
+        android:layout_height="8dp"
+        android:layout_marginBottom="80dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/MainStopButton"
+        local:MvxBind="Click StopTimeEntryCommand"
+        local:elevation="4dp"
+        android:src="@drawable/stop_white"
+        local:backgroundTint="@color/playButtonRed"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="52dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

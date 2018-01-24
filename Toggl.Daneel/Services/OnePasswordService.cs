@@ -7,6 +7,7 @@ using Foundation;
 using MvvmCross.iOS.Views.Presenters;
 using MvvmCross.Platform;
 using Toggl.Foundation.MvvmCross.Services;
+using Toggl.Multivac;
 using LoginHandler = AgileBits.OnePasswordLoginDictionaryCompletionBlock;
 
 namespace Toggl.Daneel.Services
@@ -39,8 +40,8 @@ namespace Toggl.Daneel.Services
                 var email = dict[AppExtensionLoginDictionarykeys.UsernameKey] as NSString;
                 var password = dict[AppExtensionLoginDictionarykeys.PasswordKey] as NSString;
 
-                var info = new PasswordManagerResult(email, password);
-                observer.OnNext(info);
+                observer.OnNext(new PasswordManagerResult(
+                    Email.From(email), Password.From(password)));
             }
             else
             {

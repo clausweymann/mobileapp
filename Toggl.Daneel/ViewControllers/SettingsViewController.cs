@@ -132,7 +132,6 @@ namespace Toggl.Daneel.ViewControllers
             FeedbackView.Hidden = true;
             RateView.Hidden = true;
             UpdateView.Hidden = true;
-            HelpView.Hidden = true;
 
             TopConstraint.AdaptForIos10(NavigationController.NavigationBar);
         }

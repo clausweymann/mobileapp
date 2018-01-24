@@ -29,7 +29,9 @@ namespace Toggl.Ultrawave.Tests.ApiClients
 
                 apiClient.Send(Arg.Any<Request>()).Returns(x => new Response("It lives", true, "text/plain", new List<KeyValuePair<string, IEnumerable<string>>>(), OK));
 
-                var credentials = Credentials.WithPassword("susancalvin@psychohistorian.museum".ToEmail(), "theirobotmoviesucked123");
+                var credentials = Credentials.WithPassword(
+                    "susancalvin@psychohistorian.museum".ToEmail(),
+                    "theirobotmoviesucked123".ToPassword());
                 const string expectedHeader = "c3VzYW5jYWx2aW5AcHN5Y2hvaGlzdG9yaWFuLm11c2V1bTp0aGVpcm9ib3Rtb3ZpZXN1Y2tlZDEyMw==";
 
                 var testApi = new TestApi(endpoint, apiClient, serializer, credentials, endpoint);
@@ -58,7 +60,9 @@ namespace Toggl.Ultrawave.Tests.ApiClients
             {
                 apiClient.Send(Arg.Any<Request>()).Returns(x => new Response("It lives", true, "text/plain", new List<KeyValuePair<string, IEnumerable<string>>>(), OK));
 
-                var credentials = Credentials.WithPassword("susancalvin@psychohistorian.museum".ToEmail(), "theirobotmoviesucked123");
+                var credentials = Credentials.WithPassword(
+                    "susancalvin@psychohistorian.museum".ToEmail(),
+                    "theirobotmoviesucked123".ToPassword());
                 var endpoint = Endpoint.Get(BaseUrls.ForApi(ApiEnvironment.Staging), "");
                 var testApi = new TestApi(endpoint, apiClient, serializer, credentials, endpoint);
 
@@ -99,7 +103,9 @@ namespace Toggl.Ultrawave.Tests.ApiClients
                 serializer.Deserialize<string>(Arg.Any<string>()).Returns(_ => throw new Exception());
                 apiClient.Send(Arg.Any<Request>()).Returns(x => new Response(rawResponse, true, "text/plain", new List<KeyValuePair<string, IEnumerable<string>>>(), OK));
 
-                var credentials = Credentials.WithPassword("susancalvin@psychohistorian.museum".ToEmail(), "theirobotmoviesucked123");
+                var credentials = Credentials.WithPassword(
+                    "susancalvin@psychohistorian.museum".ToEmail(),
+                    "theirobotmoviesucked123".ToPassword());
                 var endpoint = Endpoint.Get(BaseUrls.ForApi(ApiEnvironment.Staging), "");
                 var testApi = new TestApi(endpoint, apiClient, serializer, credentials, endpoint);
 

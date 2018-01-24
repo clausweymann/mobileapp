@@ -490,5 +490,95 @@ namespace Toggl.Foundation {
                 return ResourceManager.GetString("ThisYear", resourceCulture);
             }
         }
+        
+        public static string WorkingOnThis {
+            get {
+                return ResourceManager.GetString("WorkingOnThis", resourceCulture);
+            }
+        }
+        
+        public static string WorkingOnThese {
+            get {
+                return ResourceManager.GetString("WorkingOnThese", resourceCulture);
+            }
+        }
+        
+        public static string Of {
+            get {
+                return ResourceManager.GetString("Of", resourceCulture);
+            }
+        }
+        
+        public static string NoTagsInfoMessage {
+            get {
+                return ResourceManager.GetString("NoTagsInfoMessage", resourceCulture);
+            }
+        }
+       
+        public static string NoProjectsInfoMessage {
+            get {
+                return ResourceManager.GetString("NoProjectsInfoMessage", resourceCulture);
+            }
+        }
+        
+        public static string MondayInitial {
+            get {
+                return ResourceManager.GetString("MondayInitial", resourceCulture);
+            }
+        }
+        
+        public static string TuesdayInitial {
+            get {
+                return ResourceManager.GetString("TuesdayInitial", resourceCulture);
+            }
+        }
+        
+        public static string WednesdayInitial {
+            get {
+                return ResourceManager.GetString("WednesdayInitial", resourceCulture);
+            }
+        }
+        
+        public static string ThursdayInitial {
+            get {
+                return ResourceManager.GetString("ThursdayInitial", resourceCulture);
+            }
+        }
+        
+        public static string FridayInitial {
+            get {
+                return ResourceManager.GetString("FridayInitial", resourceCulture);
+            }
+        }
+        
+        public static string SaturdayInitial {
+            get {
+                return ResourceManager.GetString("SaturdayInitial", resourceCulture);
+            }
+        }
+        
+        public static string SundayInitial {
+            get {
+                return ResourceManager.GetString("SundayInitial", resourceCulture);
+            }
+        }
+        
+        public static string Help {
+            get {
+                return ResourceManager.GetString("Help", resourceCulture);
+            }
+        }
+        
+        public static string WorkspaceChangedAlertTitle {
+            get {
+                return ResourceManager.GetString("WorkspaceChangedAlertTitle", resourceCulture);
+            }
+        }
+        
+        public static string WorkspaceChangedAlertMessage {
+            get {
+                return ResourceManager.GetString("WorkspaceChangedAlertMessage", resourceCulture);
+            }
+        }
     }
 }

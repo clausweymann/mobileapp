@@ -31,21 +31,23 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
 
             protected override SettingsViewModel CreateViewModel()
-                => new SettingsViewModel(DataSource, NavigationService, DialogService);
+                => new SettingsViewModel(DataSource, NavigationService, DialogService, PlatformConstants);
         }
 
         public sealed class TheConstructor : SettingsViewModelTest
         {
             [Theory, LogIfTooSlow]
-            [ClassData(typeof(ThreeParameterConstructorTestData))]
-            public void ThrowsIfAnyOfTheArgumentsIsNull(bool useDataSource, bool useNavigationService, bool useDialogService)
+            [ClassData(typeof(FourParameterConstructorTestData))]
+            public void ThrowsIfAnyOfTheArgumentsIsNull(
+                bool useDataSource, bool useNavigationService, bool useDialogService, bool usePlatformConstants)
             {
                 var dataSource = useDataSource ? DataSource : null;
                 var navigationService = useNavigationService ? NavigationService : null;
                 var dialogService = useDialogService ? DialogService : null;
+                var platformConstants = usePlatformConstants ? PlatformConstants : null;
 
                 Action tryingToConstructWithEmptyParameters =
-                    () => new SettingsViewModel(dataSource, navigationService, dialogService);
+                    () => new SettingsViewModel(dataSource, navigationService, dialogService, platformConstants);
 
                 tryingToConstructWithEmptyParameters
                     .ShouldThrow<ArgumentNullException>();
@@ -370,6 +372,31 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 ViewModel.ToggleUseTwentyFourHourClockCommand.Execute();
 
                 ViewModel.UseTwentyFourHourClock.Should().Be(expected);
+            }
+        }
+
+        public sealed class TheHelpCommand : SettingsViewModelTest
+        {
+            [Property]
+            public void NavigatesToBrowserViewModelWithUrlFromPlatformConstants(
+                NonEmptyString nonEmptyString)
+            {
+                var helpUrl = nonEmptyString.Get;
+                PlatformConstants.HelpUrl.Returns(helpUrl);
+
+                ViewModel.HelpCommand.Execute();
+
+                NavigationService.Received().Navigate<BrowserViewModel, BrowserParameters>(
+                    Arg.Is<BrowserParameters>(parameter => parameter.Url == helpUrl));
+            }
+
+            [Fact]
+            public void NavigatesToBrowserViewModelWithHelpTitle()
+            {
+                ViewModel.HelpCommand.Execute();
+
+                NavigationService.Received().Navigate<BrowserViewModel, BrowserParameters>(
+                    Arg.Is<BrowserParameters>(parameter => parameter.Title == Resources.Help));
             }
         }
     }

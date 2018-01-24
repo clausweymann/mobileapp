@@ -38,7 +38,7 @@ namespace Toggl.Daneel.ViewControllers
             bindingSet.Bind(SuggestionsTableViewConstraint)
                       .For(v => v.Constant)
                       .To(vm => vm.AllowQuerying)
-                      .WithConversion(new BoolToConstantValueConverter<nfloat>(72, 28));
+                      .WithConversion(new BoolToConstantValueConverter<nfloat>(72, 24));
 
             bindingSet.Apply();
 

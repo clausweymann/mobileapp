@@ -4,21 +4,29 @@
     android:background="@color/lightGray"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent">
-        <FrameLayout
-            android:id="@+id/MainSuggestionsContainer"
-            android:layout_height="130dp"
-            android:layout_width="match_parent" />
-        <FrameLayout
-            android:id="@+id/MainTimeEntriesLogContainer"
-            android:layout_below="@id/MainSuggestionsContainer"
+        android:layout_marginTop="?attr/actionBarSize">
+        <RelativeLayout
             android:layout_height="match_parent"
-            android:layout_width="match_parent" />
-    </RelativeLayout>
+            android:layout_width="match_parent">
+            <FrameLayout
+                android:id="@+id/MainSuggestionsContainer"
+                android:layout_height="130dp"
+                android:layout_width="match_parent" />
+            <FrameLayout
+                android:id="@+id/MainTimeEntriesLogContainer"
+                android:layout_below="@id/MainSuggestionsContainer"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent" />
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+    <include
+        layout="@layout/MainRunningTimeEntry" />
     <android.support.design.widget.FloatingActionButton
-        local:MvxBind="Click StartTimeEntryCommand"
+        android:id="@+id/MainPlayButton"
+        local:MvxBind="Click StartTimeEntryCommand;"
         local:backgroundTint="@color/playButtonGreen"
         local:elevation="4dp"
         android:src="@drawable/play_white"

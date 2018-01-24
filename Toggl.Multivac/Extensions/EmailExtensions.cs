@@ -3,6 +3,6 @@
     public static class EmailExtensions
     {
         public static Email ToEmail(this string self)
-            => Email.FromString(self);
+            => Email.From(self);
     }
 }

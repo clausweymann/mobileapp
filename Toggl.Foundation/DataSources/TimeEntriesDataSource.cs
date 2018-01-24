@@ -59,7 +59,8 @@ namespace Toggl.Foundation.DataSources
                     .Merge(TimeEntryUpdated.Where(tuple => tuple.Entity.Id == currentlyRunningTimeEntryId).Select(tuple => tuple.Entity))
                     .Merge(TimeEntryDeleted.Where(id => id == currentlyRunningTimeEntryId).Select(_ => null as IDatabaseTimeEntry))
                     .Select(runningTimeEntry)
-                    .Do(setRunningTimeEntryId);
+                    .Do(setRunningTimeEntryId)
+                    .ConnectedReplay();
 
             IsEmpty =
                 Observable.Return(default(IDatabaseTimeEntry))

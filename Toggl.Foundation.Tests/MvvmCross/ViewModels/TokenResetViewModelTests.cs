@@ -8,7 +8,10 @@ using Toggl.Foundation.DataSources;
 using Toggl.Foundation.Login;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Tests.Generators;
+using Toggl.Multivac;
 using Xunit;
+using static Toggl.Multivac.Extensions.EmailExtensions;
+using static Toggl.Multivac.Extensions.PasswordExtensions;
 
 namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 {
@@ -16,11 +19,11 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
     {
         public abstract class TokenResetViewModelTest : BaseViewModelTests<TokenResetViewModel>
         {
-            protected const string ValidEmail = "susancalvin@psychohistorian.museum";
-            protected const string InvalidEmail = "foo@";
+            protected static readonly Email ValidEmail = "susancalvin@psychohistorian.museum".ToEmail();
+            protected static readonly Email InvalidEmail = "foo@".ToEmail();
 
-            protected const string ValidPassword = "123456";
-            protected const string InvalidPassword = "";
+            protected static readonly Password ValidPassword = "123456".ToPassword();
+            protected static readonly Password InvalidPassword = Password.Empty;
 
             protected ILoginManager LoginManager { get; } = Substitute.For<ILoginManager>();
 
@@ -70,7 +73,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             {
                 var scheduler = new TestScheduler();
                 var never = Observable.Never<ITogglDataSource>();
-                LoginManager.RefreshToken(Arg.Any<string>()).Returns(never);
+                LoginManager.RefreshToken(Arg.Any<Password>()).Returns(never);
                 ViewModel.Password = ValidPassword;
 
                 ViewModel.DoneCommand.Execute();
@@ -88,7 +91,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 ViewModel.DoneCommand.Execute();
 
-                LoginManager.DidNotReceive().RefreshToken(Arg.Any<string>());
+                LoginManager.DidNotReceive().RefreshToken(Arg.Any<Password>());
             }
 
             [Fact, LogIfTooSlow]
@@ -105,7 +108,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void NavigatesToTheMainViewModelModelWhenTheTokenRefreshSucceeds()
             {
                 ViewModel.Password = ValidPassword;
-                LoginManager.RefreshToken(Arg.Any<string>())
+                LoginManager.RefreshToken(Arg.Any<Password>())
                             .Returns(Observable.Return(Substitute.For<ITogglDataSource>()));
 
                 ViewModel.DoneCommand.Execute();
@@ -117,7 +120,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void StopsTheViewModelLoadStateWhenItCompletes()
             {
                 ViewModel.Password = ValidPassword;
-                LoginManager.RefreshToken(Arg.Any<string>())
+                LoginManager.RefreshToken(Arg.Any<Password>())
                             .Returns(Observable.Return(Substitute.For<ITogglDataSource>()));
 
                 ViewModel.DoneCommand.Execute();
@@ -129,7 +132,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void StopsTheViewModelLoadStateWhenItErrors()
             {
                 ViewModel.Password = ValidPassword;
-                LoginManager.RefreshToken(Arg.Any<string>())
+                LoginManager.RefreshToken(Arg.Any<Password>())
                             .Returns(Observable.Throw<ITogglDataSource>(new Exception()));
 
                 ViewModel.DoneCommand.Execute();
@@ -141,7 +144,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             public void DoesNotNavigateWhenTheLoginFails()
             {
                 ViewModel.Password = ValidPassword;
-                LoginManager.RefreshToken(Arg.Any<string>())
+                LoginManager.RefreshToken(Arg.Any<Password>())
                             .Returns(Observable.Throw<ITogglDataSource>(new Exception()));
 
                 ViewModel.DoneCommand.Execute();

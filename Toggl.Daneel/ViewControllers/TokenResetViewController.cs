@@ -39,12 +39,18 @@ namespace Toggl.Daneel.ViewControllers
             var bindingSet = this.CreateBindingSet<TokenResetViewController, TokenResetViewModel>();
 
             //Text
-            bindingSet.Bind(EmailLabel).To(vm => vm.Email);
             bindingSet.Bind(ErrorLabel).To(vm => vm.Error);
-            bindingSet.Bind(PasswordTextField).To(vm => vm.Password);
             bindingSet.Bind(PasswordTextField)
                       .For(v => v.BindSecureTextEntry())
                       .To(vm => vm.IsPasswordMasked);
+
+            bindingSet.Bind(EmailLabel)
+                      .To(vm => vm.Email)
+                      .WithConversion(new EmailToStringValueConverter());
+
+            bindingSet.Bind(PasswordTextField)
+                      .To(vm => vm.Password)
+                      .WithConversion(new PasswordToStringValueConverter());
 
             //Commands
             bindingSet.Bind(SignOutButton).To(vm => vm.SignOutCommand);

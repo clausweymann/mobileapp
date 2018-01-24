@@ -33,6 +33,11 @@ namespace Toggl.Giskard
             );
 
             registry.RegisterCustomBindingFactory<View>(
+                DrawableColorTargetBinding.BindingName,
+                view => new DrawableColorTargetBinding(view)
+            );
+
+            registry.RegisterCustomBindingFactory<View>(
                 ViewMarginTargetBinding.BindingName,
                 view => new ViewMarginTargetBinding(view)
             );

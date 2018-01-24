@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Toggl.Ultrawave.Models;
 using Xunit;
+using static Toggl.Multivac.Extensions.EmailExtensions;
 
 namespace Toggl.Ultrawave.Tests.Models
 {
@@ -17,7 +18,7 @@ namespace Toggl.Ultrawave.Tests.Models
                 Id = 9000,
                 ApiToken = "1971800d4d82861d8f2c1651fea4d212",
                 DefaultWorkspaceId = 777,
-                Email = "johnt@swift.com",
+                Email = "johnt@swift.com".ToEmail(),
                 Fullname = "John Swift",
                 TimeOfDayFormat = "h:mm A",
                 DateFormat = "MM/DD/YYYY",

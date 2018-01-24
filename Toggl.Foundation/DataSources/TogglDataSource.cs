@@ -17,24 +17,36 @@ namespace Toggl.Foundation.DataSources
     {
         private readonly ITogglDatabase database;
         private readonly IApiErrorHandlingService apiErrorHandlingService;
+        private readonly IBackgroundService backgroundService;
+
+        private readonly TimeSpan minimumTimeInBackgroundForFullSync;
 
         private IDisposable errorHandlingDisposable;
+        private IDisposable signalDisposable;
+
+        private bool isLoggedIn;
 
         public TogglDataSource(
             ITogglApi api,
             ITogglDatabase database,
             ITimeService timeService,
             IApiErrorHandlingService apiErrorHandlingService,
-            Func<ITogglDataSource, ISyncManager> createSyncManager)
+            IBackgroundService backgroundService,
+            Func<ITogglDataSource, ISyncManager> createSyncManager,
+            TimeSpan minimumTimeInBackgroundForFullSync)
         {
             Ensure.Argument.IsNotNull(api, nameof(api));
             Ensure.Argument.IsNotNull(database, nameof(database));
             Ensure.Argument.IsNotNull(timeService, nameof(timeService));
             Ensure.Argument.IsNotNull(apiErrorHandlingService, nameof(apiErrorHandlingService));
+            Ensure.Argument.IsNotNull(backgroundService, nameof(backgroundService));
             Ensure.Argument.IsNotNull(createSyncManager, nameof(createSyncManager));
 
             this.database = database;
             this.apiErrorHandlingService = apiErrorHandlingService;
+            this.backgroundService = backgroundService;
+
+            this.minimumTimeInBackgroundForFullSync = minimumTimeInBackgroundForFullSync;
 
             User = new UserDataSource(database.User);
             Tags = new TagsDataSource(database.IdProvider, database.Tags, timeService);
@@ -50,6 +62,7 @@ namespace Toggl.Foundation.DataSources
             ReportsProvider = new ReportsProvider(api, database);
 
             errorHandlingDisposable = SyncManager.ProgressObservable.Subscribe(onSyncError);
+            isLoggedIn = true;
         }
 
         public IUserSource User { get; }
@@ -65,6 +78,22 @@ namespace Toggl.Foundation.DataSources
 
         public IReportsProvider ReportsProvider { get; }
 
+        public IObservable<Unit> StartSyncing()
+        {
+            if (isLoggedIn == false)
+                throw new InvalidOperationException("Cannot start syncing after the user logged out of the app.");
+
+            if (signalDisposable != null)
+                throw new InvalidOperationException("The StartSyncing method has already been called.");
+
+            signalDisposable = backgroundService.AppResumedFromBackground
+                .Where(timeInBackground => timeInBackground >= minimumTimeInBackgroundForFullSync)
+                .Subscribe((TimeSpan _) => SyncManager.ForceFullSync());
+
+            return SyncManager.ForceFullSync()
+                .Select(_ => Unit.Default);
+        }
+
         public IObservable<bool> HasUnsyncedData()
             => Observable.Merge(
                 hasUnsyncedData(database.TimeEntries),
@@ -79,6 +108,8 @@ namespace Toggl.Foundation.DataSources
         public IObservable<Unit> Logout()
             => SyncManager.Freeze()
                 .FirstAsync()
+                .Do(_ => isLoggedIn = false)
+                .Do(_ => stopSyncingOnSignal())
                 .SelectMany(_ => database.Clear())
                 .FirstAsync();
 
@@ -91,11 +122,17 @@ namespace Toggl.Foundation.DataSources
 
         private void onSyncError(Exception exception)
         {
-            if (apiErrorHandlingService.TryHandleDeprecationError(exception) == false
-                && apiErrorHandlingService.TryHandleUnauthorizedError(exception) == false)
+            if (apiErrorHandlingService.TryHandleDeprecationError(exception)
+                || apiErrorHandlingService.TryHandleUnauthorizedError(exception))
             {
-                throw new ArgumentException($"{nameof(TogglDataSource)} could not handle unknown sync error {exception.GetType().FullName}.", exception);
+                stopSyncingOnSignal();
+                return;
             }
+
+            throw new ArgumentException($"{nameof(TogglDataSource)} could not handle unknown sync error {exception.GetType().FullName}.", exception);
         }
+
+        private void stopSyncingOnSignal()
+            => signalDisposable?.Dispose();
     }
 }

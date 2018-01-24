@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using FluentAssertions;
 using NSubstitute;
-using Toggl.Multivac;
 using Toggl.Ultrawave.Exceptions;
 using Toggl.Ultrawave.Network;
 using Xunit;
+using static Toggl.Multivac.Extensions.EmailExtensions;
+using static Toggl.Multivac.Extensions.PasswordExtensions;
 
 namespace Toggl.Ultrawave.Tests.Exceptions
 {
@@ -53,7 +54,7 @@ namespace Toggl.Ultrawave.Tests.Exceptions
         public static IEnumerable<object[]> AuthHeadersWithoutApiToken
             => new[]
             {
-                    new object[] { Credentials.WithPassword(Email.FromString("some@email.com"), "123456").Header },
+                new object[] { Credentials.WithPassword("some@email.com".ToEmail(), "123456".ToPassword()).Header },
                     new object[] { Credentials.None.Header },
                     new object[] { new HttpHeader("Authorization", Credentials.WithApiToken("some_token").Header.Value, HttpHeader.HeaderType.None) },
                     new object[] { new HttpHeader("Authorization", null, HttpHeader.HeaderType.Auth) },

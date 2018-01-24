@@ -16,6 +16,7 @@ using Toggl.PrimeRadiant.Models;
 using static Toggl.Foundation.Helper.Constants;
 using static Toggl.Multivac.Extensions.StringExtensions;
 using Toggl.Multivac.Extensions;
+using Toggl.Foundation.MvvmCross.Services;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
@@ -24,11 +25,13 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
     {
         private readonly Random random = new Random();
         private readonly ITogglDataSource dataSource;
+        private readonly IDialogService dialogService;
         private readonly IMvxNavigationService navigationService;
 
         private bool isPro;
         private long? clientId;
         private long workspaceId;
+        private long initialWorkspaceId;
         private HashSet<string> projectNames = new HashSet<string>();
 
         public bool IsPrivate { get; set; }
@@ -64,12 +67,17 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public IMvxAsyncCommand PickWorkspaceCommand { get; }
 
-        public EditProjectViewModel(ITogglDataSource dataSource, IMvxNavigationService navigationService)
+        public EditProjectViewModel(
+            ITogglDataSource dataSource,
+            IDialogService dialogService,
+            IMvxNavigationService navigationService)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
+            Ensure.Argument.IsNotNull(dialogService, nameof(dialogService));
             Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
 
             this.dataSource = dataSource;
+            this.dialogService = dialogService;
             this.navigationService = navigationService;
 
             DoneCommand = new MvxAsyncCommand(done);
@@ -91,7 +99,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         {
             var workspace = await dataSource.Workspaces.GetDefault();
             isPro = await dataSource.Workspaces.WorkspaceHasFeature(workspace.Id, WorkspaceFeatureId.Pro);
-            workspaceId = workspace.Id;
+            workspaceId = initialWorkspaceId = workspace.Id;
             WorkspaceName = workspace.Name;
 
             await setupNameAlreadyTakenError();
@@ -121,21 +129,31 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private async Task done()
         {
             if (!SaveEnabled) return;
-            
+
+            if (initialWorkspaceId != workspaceId)
+            {
+                var shouldContinue = await dialogService.Confirm(
+                    Resources.WorkspaceChangedAlertTitle,
+                    Resources.WorkspaceChangedAlertMessage,
+                    Resources.Ok,
+                    Resources.Cancel
+                );
+
+                if (!shouldContinue) return;
+            }
+
             var workspace = 
                 await (isPro 
                 ? dataSource.Workspaces.GetById(workspaceId) 
                 : Observable.Return(default(IDatabaseWorkspace)));
             
-            var billable = workspace?.ProjectsBillableByDefault;
-
             var createdProject = await dataSource.Projects.Create(new CreateProjectDTO
             {
                 Name = TrimmedName,
                 Color = $"#{Color.R:X2}{Color.G:X2}{Color.B:X2}",
                 IsPrivate = IsPrivate,
                 ClientId = clientId,
-                Billable = billable,
+                Billable = workspace?.ProjectsBillableByDefault,
                 WorkspaceId = workspaceId
             });
 

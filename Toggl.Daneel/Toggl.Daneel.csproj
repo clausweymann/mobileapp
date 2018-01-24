@@ -383,6 +383,14 @@
     <ImageAsset Include="Resources\Images.xcassets\icChartEmpty.imageset\icChartEmpty.png" />
     <ImageAsset Include="Resources\Images.xcassets\icChartEmpty.imageset\icChartEmpty%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\icChartEmpty.imageset\icChartEmpty%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationTagsSmall.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationTagsSmall.imageset\icIllustrationTagsS.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationTagsSmall.imageset\icIllustrationTagsS%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationTagsSmall.imageset\icIllustrationTagsS%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationProjectsSmall.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationProjectsSmall.imageset\icIllustrationProjectsS.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationProjectsSmall.imageset\icIllustrationProjectsS%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icIllustrationProjectsSmall.imageset\icIllustrationProjectsS%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -429,6 +437,7 @@
     <InterfaceDefinition Include="Views\Reports\ReportsCalendarQuickSelectViewCell.xib" />
     <InterfaceDefinition Include="Views\Reports\ReportsLegendViewCell.xib" />
     <InterfaceDefinition Include="Views\Reports\ReportsHeaderView.xib" />
+    <InterfaceDefinition Include="Views\StartTimeEntry\NoEntityInfoViewCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -712,7 +721,13 @@
     </Compile>
     <Compile Include="ViewSources\ReportsTableViewSource.cs" />
     <Compile Include="Views\TextViewPlaceholderManager.cs" />
+    <Compile Include="Views\StartTimeEntry\NoEntityInfoViewCell.cs" />
+    <Compile Include="Views\StartTimeEntry\NoEntityInfoViewCell.designer.cs">
+      <DependentUpon>NoEntityInfoViewCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\NoEntityInfoMessageExtensions.cs" />
     <Compile Include="Views\Reports\LoadingPieChartView.cs" />
+    <Compile Include="PlatformConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation.MvvmCross\Toggl.Foundation.MvvmCross.csproj">
@@ -764,6 +779,8 @@
     <Folder Include="Views\Color\" />
     <Folder Include="Views\EditTimeEntry\" />
     <Folder Include="Views\EntityCreation\" />
+    <Folder Include="Resources\Images.xcassets\icIllustrationTagsSmall.imageset\" />
+    <Folder Include="Resources\Images.xcassets\icIllustrationProjectsSmall.imageset\" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="GoogleService-Info.plist" />

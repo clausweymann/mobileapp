@@ -35,6 +35,7 @@ namespace Toggl.Foundation.Tests.MvvmCross
 
                 Action tryingToConstructWithEmptyParameters =
                     () => foundation.RegisterServices(
+                            0,
                             dialogService,
                             browserService,
                             keyValueStorage,
@@ -56,11 +57,12 @@ namespace Toggl.Foundation.Tests.MvvmCross
                 var database = Substitute.For<ITogglDatabase>();
                 var timeService = Substitute.For<ITimeService>();
                 var googleService = Substitute.For<IGoogleService>();
+                var backgroundService = Substitute.For<IBackgroundService>();
                 var keyValueStorage = Substitute.For<IKeyValueStorage>();
                 var apiErrorHandlingService = Substitute.For<IApiErrorHandlingService>();
                 var settingsService = new SettingsStorage(Version.Parse(version), keyValueStorage);
                 var foundationMvvmCross = new FoundationMvvmCross(apiFactory, database, timeService, googleService,
-                    settingsService, NavigationService, apiErrorHandlingService);
+                    backgroundService, settingsService, NavigationService, apiErrorHandlingService);
                 timeService.CurrentDateTime.Returns(now);
                 keyValueStorage.GetString("LastAccessDate").Returns(now.AddDays(-60).ToString());
 

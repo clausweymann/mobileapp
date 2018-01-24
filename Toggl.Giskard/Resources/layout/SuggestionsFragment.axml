@@ -16,6 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
+        android:id="@+id/SuggestionsIndicatorTextView"
         android:textSize="12sp"
         android:letterSpacing="0.04"
         android:textColor="@color/defaultText"
@@ -29,6 +30,7 @@
     <toggl.giskard.views.SuggestionsRecyclerView
         local:MvxBind="ItemsSource Suggestions; ItemClick StartTimeEntryCommand"
         local:MvxTemplateSelector="@string/SuggestionsTemplateSelector"
+        android:id="@+id/SuggestionsRecyclerView"
         android:layout_marginTop="16dp"
         android:layout_below="@id/SuggestionsHintTextView"
         android:layout_height="match_parent"

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -6,9 +6,13 @@ using System.Linq;
 using Android.Runtime;
 using Android.Support.V7.Widget;
 using Android.Views;
+using MvvmCross.Binding.Droid.BindingContext;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Droid.Support.V7.RecyclerView;
 using Toggl.Foundation.MvvmCross.Collections;
+using Toggl.Foundation.MvvmCross.ViewModels;
+using Toggl.Giskard.TemplateSelectors;
+using Toggl.Giskard.Views;
 
 namespace Toggl.Giskard.Adapters
 {
@@ -16,6 +20,10 @@ namespace Toggl.Giskard.Adapters
     {
         private readonly object headerListLock = new object();
         private readonly List<int> headerIndexes = new List<int>();
+
+        private int? cachedItemCount;
+
+        public IMvxAsyncCommand<TimeEntryViewModel> ContinueCommand { get; set; }
 
         public TimeEntriesLogRecyclerAdapter()
         {
@@ -44,6 +52,7 @@ namespace Toggl.Giskard.Adapters
         {
             lock (headerListLock)
             {
+                cachedItemCount = null;
                 headerIndexes.Clear();
 
                 var timeEntryGroups = getTimeEntryGroups();
@@ -63,7 +72,7 @@ namespace Toggl.Giskard.Adapters
             try
             {
                 var timeEntryGroups = ItemsSource as MvxObservableCollection<TimeEntryViewModelCollection>;
-                if (timeEntryGroups == null)
+                if (timeEntryGroups == null || viewPosition == ItemCount - 1)
                     return null;
 
                 var groupIndex = headerIndexes.IndexOf(viewPosition);
@@ -86,11 +95,51 @@ namespace Toggl.Giskard.Adapters
         {
             get
             {
-                var timeEntryGroups = getTimeEntryGroups();
-                if (timeEntryGroups == null) return 0;
+                if (cachedItemCount == null)
+                {
+                    var timeEntryGroups = getTimeEntryGroups();
+                    if (timeEntryGroups == null) return 0;
 
-                var itemCount = timeEntryGroups.Aggregate(timeEntryGroups.Count, (acc, g) => acc + g.Count);
-                return itemCount;
+                    var itemCount = timeEntryGroups.Aggregate(timeEntryGroups.Count, (acc, g) => acc + g.Count);
+                    cachedItemCount = itemCount + 1;
+                }
+
+                return cachedItemCount.Value;
+            }
+        }
+
+        internal void ContinueTimeEntry(int viewPosition)
+        {
+            var timeEntry = GetItem(viewPosition) as TimeEntryViewModel;
+            if (timeEntry == null) return;
+            ContinueCommand?.ExecuteAsync(timeEntry);
+        }
+
+        public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
+        {
+            if (viewType != TimeEntriesLogTemplateSelector.Item)
+                return base.OnCreateViewHolder(parent, viewType);
+
+            var itemBindingContext = new MvxAndroidBindingContext(parent.Context, BindingContext.LayoutInflaterHolder);
+            var inflatedView = InflateViewForHolder(parent, viewType, itemBindingContext);
+            var viewHolder = new TimeEntriesLogRecyclerViewHolder(inflatedView, itemBindingContext)
+            {
+                Click = ItemClick,
+                LongClick = ItemLongClick,
+                ContinueCommand = ContinueCommand
+            };
+
+            return viewHolder;
+        }
+
+        public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
+        {
+            base.OnBindViewHolder(holder, position);
+
+            if (holder is TimeEntriesLogRecyclerViewHolder timeEntriesLogRecyclerViewHolder
+                && GetItem(position) is TimeEntryViewModel timeEntry)
+            {
+                timeEntriesLogRecyclerViewHolder.CanSync = timeEntry.CanSync;
             }
         }
 

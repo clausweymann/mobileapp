@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Multivac;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels.Calendar
@@ -7,38 +8,42 @@ namespace Toggl.Foundation.MvvmCross.ViewModels.Calendar
     [Preserve(AllMembers = true)]
     public sealed class CalendarDayViewModel : INotifyPropertyChanged
     {
+        private readonly DateTimeOffset dateTime;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int Day { get; }
 
         public CalendarMonth CalendarMonth { get; }
 
-        public bool IsInCurrentMonth { get; set; }
+        public bool IsInCurrentMonth { get; }
 
-        public bool Selected { get; set; }
+        public bool IsToday { get; }
 
-        public bool IsToday { get; set; }
-        
-        public bool IsStartOfSelectedPeriod { get; set; }
+        public bool Selected { get; private set; }
 
-        public bool IsEndOfSelectedPeriod { get; set; }
+        public bool IsStartOfSelectedPeriod { get; private set; }
 
-        public CalendarDayViewModel(int day, CalendarMonth month, bool isInCurrentMonth, bool isToday)
+        public bool IsEndOfSelectedPeriod { get; private set; }
+
+        public DateTimeOffset DateTimeOffset => dateTime;
+
+        public CalendarDayViewModel(int day, CalendarMonth month, bool isInCurrentMonth, DateTimeOffset today)
         {
             Day = day;
             CalendarMonth = month;
             IsInCurrentMonth = isInCurrentMonth;
-            IsToday = isToday;
+            dateTime = new DateTimeOffset(month.Year, month.Month, Day, 0, 0, 0, TimeSpan.Zero);
+            IsToday = today.Date == dateTime.Date;
         }
 
-        public DateTimeOffset ToDateTimeOffset()
-            => new DateTimeOffset(
-                CalendarMonth.Year,
-                CalendarMonth.Month,
-                Day,
-                0,
-                0,
-                0,
-                TimeSpan.Zero);
+        public void OnSelectedRangeChanged(DateRangeParameter selectedRange)
+        {
+            Selected = selectedRange != null && selectedRange.StartDate.Date <= dateTime.Date && selectedRange.EndDate.Date >= dateTime.Date;
+
+            IsStartOfSelectedPeriod = selectedRange != null && selectedRange.StartDate.Date == dateTime.Date;
+
+            IsEndOfSelectedPeriod = selectedRange != null && selectedRange.EndDate.Date == dateTime.Date;
+        }
     }
 }

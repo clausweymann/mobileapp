@@ -1,4 +1,5 @@
-﻿using Android.Views;
+﻿using Android.Support.V7.Widget;
+using Android.Views;
 using Android.Widget;
 
 namespace Toggl.Giskard.Extensions
@@ -28,6 +29,11 @@ namespace Toggl.Giskard.Extensions
                     var newFrameLayoutParams = new FrameLayout.LayoutParams(self);
                     newFrameLayoutParams.SetMargins(actualLeft, actualTop, actualRight, actualBottom);
                     return newFrameLayoutParams;
+
+                case RecyclerView.LayoutParams recyclerParams:
+                    var newRecyclerParams = new FrameLayout.LayoutParams(self);
+                    newRecyclerParams.SetMargins(actualLeft, actualTop, actualRight, actualBottom);
+                    return newRecyclerParams;
             }
 
             return null;

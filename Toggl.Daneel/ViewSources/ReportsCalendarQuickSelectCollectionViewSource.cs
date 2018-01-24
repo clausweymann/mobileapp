@@ -1,20 +1,35 @@
 ﻿using System;
+using CoreGraphics;
 using Foundation;
 using MvvmCross.Binding.ExtensionMethods;
 using MvvmCross.Binding.iOS.Views;
 using Toggl.Daneel.Views.Reports;
+using Toggl.Foundation.MvvmCross.ViewModels.Calendar.QuickSelectShortcuts;
+using Toggl.Multivac;
 using UIKit;
 
 namespace Toggl.Daneel.ViewSources
 {
     public sealed class ReportsCalendarQuickSelectCollectionViewSource
-        : MvxCollectionViewSource
+        : MvxCollectionViewSource, IUICollectionViewDelegateFlowLayout
     {
+        private const int cellHeight = 32;
+        private const int horizontalPadding = 20;
         private const string cellIdentifier = nameof(ReportsCalendarQuickSelectViewCell);
 
+        private readonly UIStringAttributes titleAttributes;
+
         public ReportsCalendarQuickSelectCollectionViewSource(
-            UICollectionView collectionView) : base(collectionView)
+            UICollectionView collectionView, UIFont font) : base(collectionView)
         {
+            Ensure.Argument.IsNotNull(collectionView, nameof(collectionView));
+            Ensure.Argument.IsNotNull(font, nameof(font));
+
+            titleAttributes = new UIStringAttributes
+            {
+                Font = font
+            };
+
             collectionView.RegisterNibForCell(ReportsCalendarQuickSelectViewCell.Nib, cellIdentifier);
         }
 
@@ -38,5 +53,18 @@ namespace Toggl.Daneel.ViewSources
 
         protected override object GetItemAt(NSIndexPath indexPath)
             => ItemsSource.ElementAt((int)indexPath.Item);
+
+        [Export("collectionView:layout:sizeForItemAtIndexPath:")]
+        public CGSize GetSizeForItem(UICollectionView collectionView, UICollectionViewLayout layout, NSIndexPath indexPath)
+        {
+            var quickSelectShortcut = (CalendarBaseQuickSelectShortcut)GetItemAt(indexPath);
+            var title = new NSString(quickSelectShortcut.Title);
+            var titleSize = title.GetSizeUsingAttributes(titleAttributes);
+
+            return new CGSize(
+                Math.Ceiling(titleSize.Width) + horizontalPadding,
+                cellHeight
+            );
+        }
     }
 }

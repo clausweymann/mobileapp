@@ -1,4 +1,5 @@
-﻿using MvvmCross.Core.Navigation;
+﻿using System.Threading.Tasks;
+using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Multivac;
@@ -14,11 +15,15 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public string Title { get; private set; }
 
+        public IMvxAsyncCommand BackCommand { get; private set; }
+
         public BrowserViewModel(IMvxNavigationService navigationService)
         {
             Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
 
             this.navigationService = navigationService;
+
+            BackCommand = new MvxAsyncCommand(back);
         }
 
         public override void Prepare(BrowserParameters parameter)
@@ -26,5 +31,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             Url = parameter.Url;
             Title = parameter.Title;
         }
+
+        private Task back() => navigationService.Close(this);
     }
 }

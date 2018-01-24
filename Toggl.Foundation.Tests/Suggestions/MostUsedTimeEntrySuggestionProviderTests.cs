@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FsCheck;
+using FsCheck.Xunit;
 using NSubstitute;
 using Toggl.Foundation.Suggestions;
 using Toggl.Foundation.Tests.Generators;
@@ -20,6 +21,8 @@ namespace Toggl.Foundation.Tests.Suggestions
     {
         public abstract class MostUsedTimeEntrySuggestionProviderTest
         {
+            protected const int NumberOfSuggestions = 7;
+
             protected MostUsedTimeEntrySuggestionProvider Provider { get; }
             protected ITimeService TimeService { get; } = Substitute.For<ITimeService>();
             protected ITogglDatabase Database { get; } = Substitute.For<ITogglDatabase>();
@@ -28,7 +31,7 @@ namespace Toggl.Foundation.Tests.Suggestions
 
             protected MostUsedTimeEntrySuggestionProviderTest()
             {
-                Provider = new MostUsedTimeEntrySuggestionProvider(Database, TimeService);
+                Provider = new MostUsedTimeEntrySuggestionProvider(Database, TimeService, NumberOfSuggestions);
 
                 TimeService.CurrentDateTime.Returns(_ => Now);
             }
@@ -44,7 +47,7 @@ namespace Toggl.Foundation.Tests.Suggestions
                 var timeService = useTimeService ? TimeService : null;
 
                 Action tryingToConstructWithEmptyParameters =
-                    () => new MostUsedTimeEntrySuggestionProvider(database, timeService);
+                    () => new MostUsedTimeEntrySuggestionProvider(database, timeService, NumberOfSuggestions);
 
                 tryingToConstructWithEmptyParameters
                     .ShouldThrow<ArgumentNullException>();
@@ -81,18 +84,21 @@ namespace Toggl.Foundation.Tests.Suggestions
                 suggestions.Should().HaveCount(0);
             }
 
-            [Fact, LogIfTooSlow]
-            public async Task ReturnsUpToSevenSuggestions()
+            [Property(StartSize = 1, EndSize = 10, MaxTest = 10)]
+            public void ReturnsUpToNSuggestionsWhereNIsTheNumberUsedWhenConstructingTheProvider(
+                NonNegativeInt numberOfSuggestions)
             {
-                var timeEntries = getTimeEntries(2, 2, 2, 3, 3, 4, 5);
+                var provider = new MostUsedTimeEntrySuggestionProvider(Database, TimeService, numberOfSuggestions.Get);
+
+                var timeEntries = getTimeEntries(2, 2, 2, 3, 3, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 9);
 
                 Database.TimeEntries
                         .GetAll(Arg.Any<Func<IDatabaseTimeEntry, bool>>())
                         .Returns(Observable.Return(timeEntries));
 
-                var suggestions = await Provider.GetSuggestions().ToList();
+                var suggestions = provider.GetSuggestions().ToList().Wait();
 
-                suggestions.Should().HaveCount(7);
+                suggestions.Should().HaveCount(numberOfSuggestions.Get);
             }
 
             [Fact, LogIfTooSlow]

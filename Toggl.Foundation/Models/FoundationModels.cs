@@ -180,7 +180,7 @@ namespace Toggl.Foundation.Models
 
         public long DefaultWorkspaceId { get; }
 
-        public string Email { get; }
+        public Email Email { get; }
 
         public string Fullname { get; }
 

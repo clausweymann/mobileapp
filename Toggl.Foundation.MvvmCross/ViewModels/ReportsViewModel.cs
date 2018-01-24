@@ -64,8 +64,8 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public IMvxCommand<DateRangeParameter> ChangeDateRangeCommand { get; }
 
-        public ReportsViewModel(ITogglDataSource dataSource, 
-                                ITimeService timeService, 
+        public ReportsViewModel(ITogglDataSource dataSource,
+                                ITimeService timeService,
                                 IMvxNavigationService navigationService)
         {
             Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
@@ -139,11 +139,13 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         private void toggleCalendar()
         {
             ChangePresentation(new ToggleCalendarVisibilityHint());
+            calendarViewModel.OnToggleCalendar();
         }
 
         private void hideCalendar()
         {
             ChangePresentation(new ToggleCalendarVisibilityHint(forceHide: true));
+            calendarViewModel.OnHideCalendar();
         }
 
         private void changeDateRange(DateRangeParameter dateRange)
@@ -155,8 +157,16 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         }
 
         private void updateCurrentDateRangeString()
-            => CurrentDateRangeString = IsCurrentWeek
+        {
+            if (startDate == endDate)
+            {
+                CurrentDateRangeString = $"{startDate.ToString(dateFormat)} ▾";
+                return;
+            }
+            
+            CurrentDateRangeString = IsCurrentWeek
                 ? $"{Resources.ThisWeek} ▾"
                 : $"{startDate.ToString(dateFormat)} - {endDate.ToString(dateFormat)} ▾";
+        }
     }
 }

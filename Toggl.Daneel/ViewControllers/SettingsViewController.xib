@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -275,7 +275,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mmI-mx-iUP">
-                    <rect key="frame" x="0.0" y="302" width="375" height="44"/>
+                    <rect key="frame" x="0.0" y="144" width="375" height="44"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Submit Feedback" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7KY-Cw-c2h">
                             <rect key="frame" x="16" y="13" width="120" height="18"/>
@@ -321,7 +321,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DlP-8Z-xqN">
-                    <rect key="frame" x="0.0" y="346" width="375" height="44"/>
+                    <rect key="frame" x="0.0" y="188" width="375" height="44"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rate Toggl" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rhg-wD-k6k">
                             <rect key="frame" x="16" y="12.5" width="73" height="18"/>
@@ -357,7 +357,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZwN-gq-xX8">
-                    <rect key="frame" x="0.0" y="390" width="375" height="44"/>
+                    <rect key="frame" x="0.0" y="232" width="375" height="44"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Update Toggl" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vSP-oF-zqp">
                             <rect key="frame" x="16" y="12.5" width="93" height="18"/>
@@ -401,7 +401,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RBh-e3-uJT">
-                    <rect key="frame" x="0.0" y="434" width="375" height="44"/>
+                    <rect key="frame" x="0.0" y="188" width="375" height="44"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Help" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xu5-LW-WFD">
                             <rect key="frame" x="16" y="12.5" width="32" height="18"/>
@@ -579,8 +579,9 @@
                 <constraint firstItem="Ul3-j2-RlO" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="Deg-kV-GEr"/>
                 <constraint firstItem="8Qk-3T-5lj" firstAttribute="leading" secondItem="L2S-P3-jra" secondAttribute="leading" id="DqP-Cr-uyh"/>
                 <constraint firstItem="ZwN-gq-xX8" firstAttribute="top" secondItem="DlP-8Z-xqN" secondAttribute="bottom" id="EKz-34-e3I"/>
-                <constraint firstItem="mmI-mx-iUP" firstAttribute="top" secondItem="ICk-uF-BvB" secondAttribute="bottom" constant="24" id="EuG-Qd-MAx"/>
+                <constraint firstItem="RBh-e3-uJT" firstAttribute="top" secondItem="mmI-mx-iUP" secondAttribute="bottom" id="H2v-eL-fLL"/>
                 <constraint firstAttribute="trailing" secondItem="x3h-xq-GmG" secondAttribute="trailing" id="K8e-Ih-uUr"/>
+                <constraint firstItem="mmI-mx-iUP" firstAttribute="top" secondItem="gKP-Qz-N9c" secondAttribute="bottom" constant="24" id="M9S-4h-H2r"/>
                 <constraint firstItem="zSK-oz-LmT" firstAttribute="bottom" secondItem="L2S-P3-jra" secondAttribute="bottom" constant="16" id="MYl-vm-V2c"/>
                 <constraint firstAttribute="trailing" secondItem="QhC-Dd-WIg" secondAttribute="trailing" id="MaJ-Dz-RbF"/>
                 <constraint firstItem="mJh-gC-yPW" firstAttribute="centerX" secondItem="L2S-P3-jra" secondAttribute="centerX" id="OUc-De-4nT"/>
@@ -597,7 +598,6 @@
                 <constraint firstItem="8Qk-3T-5lj" firstAttribute="width" secondItem="L2S-P3-jra" secondAttribute="width" id="dm5-60-x1y"/>
                 <constraint firstItem="QhC-Dd-WIg" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="eP1-7p-Pcw"/>
                 <constraint firstItem="mmI-mx-iUP" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="ePR-4s-ERu"/>
-                <constraint firstItem="RBh-e3-uJT" firstAttribute="top" secondItem="ZwN-gq-xX8" secondAttribute="bottom" id="ef4-Lv-7Pk"/>
                 <constraint firstItem="hpG-it-oft" firstAttribute="width" secondItem="L2S-P3-jra" secondAttribute="width" id="fPy-qt-4vH"/>
                 <constraint firstAttribute="trailing" secondItem="DlP-8Z-xqN" secondAttribute="trailing" id="fbr-f5-0qu"/>
                 <constraint firstItem="x3h-xq-GmG" firstAttribute="leading" secondItem="2" secondAttribute="leading" id="fcL-Oc-6fD"/>

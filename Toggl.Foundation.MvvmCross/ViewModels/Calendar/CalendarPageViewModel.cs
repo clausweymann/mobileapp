@@ -68,8 +68,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels.Calendar
 
         private void addDay(int day, CalendarMonth month, bool isCurrentMonth)
         {
-            var isToday = month.Year == today.Year && month.Month == today.Month && day == today.Day;
-            Days.Add(new CalendarDayViewModel(day, month, isCurrentMonth, isToday));
+            Days.Add(new CalendarDayViewModel(day, month, isCurrentMonth, today));
         }
     }
 }

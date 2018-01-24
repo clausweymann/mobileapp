@@ -4,6 +4,7 @@ using Toggl.Multivac;
 
 namespace Toggl.Foundation.MvvmCross.Collections
 {
+    [Preserve(AllMembers = true)]
     public class WorkspaceGroupedCollection<T> : MvxObservableCollection<T>
     {
         public string WorkspaceName { get; }

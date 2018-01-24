@@ -5,7 +5,9 @@ using MvvmCross.iOS.Views;
 using Toggl.Daneel.Converters;
 using Toggl.Daneel.Extensions;
 using Toggl.Daneel.Presentation.Attributes;
+using Toggl.Daneel.Views.Reports;
 using Toggl.Daneel.ViewSources;
+using Toggl.Foundation;
 using Toggl.Foundation.MvvmCross.Converters;
 using Toggl.Foundation.MvvmCross.ViewModels.Calendar;
 using UIKit;
@@ -17,6 +19,17 @@ namespace Toggl.Daneel.ViewControllers
     {
         private const int estimatedQuickSelectShortcutHeight = 32;
         private const int estimatedQuickSelectShortcutWidth = 90;
+
+        private readonly string[] dayHeaders =
+        {
+            Resources.SundayInitial,
+            Resources.MondayInitial,
+            Resources.TuesdayInitial,
+            Resources.WednesdayInitial,
+            Resources.ThursdayInitial,
+            Resources.FridayInitial,
+            Resources.SaturdayInitial
+        };
 
         private bool calendarInitialized;
 
@@ -34,13 +47,10 @@ namespace Toggl.Daneel.ViewControllers
             CalendarCollectionView.DataSource = calendarCollectionViewSource;
             CalendarCollectionView.CollectionViewLayout = calendarCollectionViewLayout;
 
-            var quickSelectCollectionViewSource = new ReportsCalendarQuickSelectCollectionViewSource(QuickSelectCollectionView);
+            var quickSelectCollectionViewSource = new ReportsCalendarQuickSelectCollectionViewSource(QuickSelectCollectionView, ReportsCalendarQuickSelectViewCell.Font);
             QuickSelectCollectionView.Source = quickSelectCollectionViewSource;
 
-            QuickSelectCollectionViewLayout.EstimatedItemSize = new CGSize(
-                estimatedQuickSelectShortcutWidth,
-                estimatedQuickSelectShortcutHeight
-            );
+            setupDayHeaders();
 
             var bindingSet = this.CreateBindingSet<ReportsCalendarViewController, ReportsCalendarViewModel>();
 
@@ -100,6 +110,20 @@ namespace Toggl.Daneel.ViewControllers
 
             calendarInitialized = true;
         }
+
+        private void setupDayHeaders()
+        {
+            DayHeader0.Text = dayHeaderFor(0);
+            DayHeader1.Text = dayHeaderFor(1);
+            DayHeader2.Text = dayHeaderFor(2);
+            DayHeader3.Text = dayHeaderFor(3);
+            DayHeader4.Text = dayHeaderFor(4);
+            DayHeader5.Text = dayHeaderFor(5);
+            DayHeader6.Text = dayHeaderFor(6);
+        }
+
+        private string dayHeaderFor(int index)
+            => dayHeaders[(index + (int)ViewModel.BeginningOfWeek + 7) % 7];
     }
 }
 

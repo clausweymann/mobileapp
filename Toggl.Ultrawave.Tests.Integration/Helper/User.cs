@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Net;
 using System.Reactive.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
@@ -20,10 +17,10 @@ namespace Toggl.Ultrawave.Tests.Integration
             return Credentials.WithPassword(email, password);
         }
 
-        public static async Task<(Email email, string password)> CreateEmailPassword()
+        public static async Task<(Email email, Password password)> CreateEmailPassword()
         {
             var email = $"{Guid.NewGuid()}@mocks.toggl.com".ToEmail();
-            var password = "123456";
+            var password = "123456".ToPassword();
 
             var api = new TogglApi(new ApiConfiguration(ApiEnvironment.Staging, Credentials.None, Configuration.UserAgent));
             await api.User.SignUp(email, password);

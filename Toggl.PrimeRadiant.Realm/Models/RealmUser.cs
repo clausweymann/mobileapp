@@ -1,6 +1,7 @@
 ﻿using System;
 using Realms;
 using Toggl.Multivac;
+using Toggl.Multivac.Extensions;
 using Toggl.PrimeRadiant.Models;
 
 namespace Toggl.PrimeRadiant.Realm
@@ -24,8 +25,16 @@ namespace Toggl.PrimeRadiant.Realm
         }
 
         public int BeginningOfWeekInt { get; set; }
-        
-        public string Email { get; set; }
+
+        [Ignored]
+        public Email Email
+        {
+            get => EmailString.ToEmail();
+            set => EmailString = value.ToString();
+        }
+
+        [MapTo("Email")]
+        public string EmailString { get; set; }
 
         public string Fullname { get; set; }
 

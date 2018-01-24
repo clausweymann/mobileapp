@@ -40,8 +40,14 @@ namespace Toggl.Daneel.ViewControllers
             var bindingSet = this.CreateBindingSet<LoginViewController, LoginViewModel>();
 
             //Text
-            bindingSet.Bind(EmailTextField).To(vm => vm.Email);
-            bindingSet.Bind(PasswordTextField).To(vm => vm.Password);
+            bindingSet.Bind(EmailTextField)
+                      .To(vm => vm.Email)
+                      .WithConversion(new EmailToStringValueConverter());
+
+            bindingSet.Bind(PasswordTextField)
+                      .To(vm => vm.Password)
+                      .WithConversion(new PasswordToStringValueConverter());
+
             bindingSet.Bind(InfoLabel).To(vm => vm.InfoText);
             bindingSet.Bind(PasswordTextField)
                       .For(v => v.BindSecureTextEntry())

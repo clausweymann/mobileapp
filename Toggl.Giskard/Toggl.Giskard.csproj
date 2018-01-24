@@ -17,7 +17,7 @@
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
-    <AndroidLinkMode>None</AndroidLinkMode>
+    <AndroidLinkMode>Full</AndroidLinkMode>
     <AndroidLinkSkip>Toggl.Giskard</AndroidLinkSkip>
     <EnableProguard>true</EnableProguard>
   </PropertyGroup>
@@ -31,7 +31,15 @@
     <WarningLevel>4</WarningLevel>
     <AndroidSupportedAbis>arm64-v8a;armeabi;armeabi-v7a;x86</AndroidSupportedAbis>
 <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
-<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+<EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <AndroidCreatePackagePerAbi>true</AndroidCreatePackagePerAbi>
+    <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <AndroidSupportedAbis>armeabi-v7a;armeabi;x86_64</AndroidSupportedAbis>
+    <OutputPath>..\bin</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -195,10 +203,21 @@
     <Compile Include="Extensions\LayoutParamsExtensions.cs" />
     <Compile Include="Extensions\NumberExtensions.cs" />
     <Compile Include="Converters\BoolToConstantOverrides.cs" />
+    <Compile Include="Bindings\DrawableColorTargetBinding.cs" />
     <Compile Include="Views\SuggestionsRecyclerView.cs" />
     <Compile Include="TemplateSelectors\SuggestionsTemplateSelector.cs" />
     <Compile Include="Activities\SettingsActivity.cs" />
     <Compile Include="Bindings\EditTextFocusTargetBinding.cs" />
+    <Compile Include="Presenters\TogglPresenter.cs" />
+    <Compile Include="Views\TimeEntriesLogRecyclerViewHolder.cs" />
+    <Compile Include="Views\SuggestionsRecyclerViewSnapHelper.cs" />
+    <Compile Include="Views\SuggestionsRecyclerViewHolder.cs" />
+    <Compile Include="Adapters\SuggestionsRecyclerAdapter.cs" />
+    <Compile Include="PlatformConstants.cs" />
+    <Compile Include="Activities\StartTimeEntryActivity.cs" />
+    <Compile Include="Extensions\VisibilityExtensions.cs" />
+    <Compile Include="Activities\BrowserActivity.cs" />
+    <Compile Include="Extensions\CircularRevealAnimation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -387,9 +406,22 @@
     <AndroidResource Include="Resources\layout\SuggestionsFragment.axml" />
     <AndroidResource Include="Resources\layout\TimeEntriesLogFragment.axml" />
     <AndroidResource Include="Resources\layout\TimeEntriesLogFragmentHeader.axml" />
+    <AndroidResource Include="Resources\drawable\SmallDot.xml" />
     <AndroidResource Include="Resources\layout\SuggestionsFragmentCard.axml" />
+    <AndroidResource Include="Resources\layout\MainRunningTimeEntry.axml" />
     <AndroidResource Include="Resources\layout\SettingsActivity.axml" />
     <AndroidResource Include="Resources\layout\EditLayout.axml" />
+    <AndroidResource Include="Resources\layout\BrowserActivity.axml" />
+    <AndroidResource Include="Resources\layout\TimeEntriesLogFragmentFooter.axml" />
+    <AndroidResource Include="Resources\drawable\TopShadow.xml" />
+    <AndroidResource Include="Resources\layout\StartTimeEntryActivity.axml" />
+    <AndroidResource Include="Resources\layout\StartTimeEntryActivityTimeEntryCell.axml" />
+    <AndroidResource Include="Resources\layout\StartTimeEntryActivityProjectCell.axml" />
+    <AndroidResource Include="Resources\layout\StartTimeEntryActivityTagCell.axml" />
+    <AndroidResource Include="Resources\layout\StartTimeEntryActivityTaskCell.axml" />
+    <AndroidResource Include="Resources\layout\StartTimeEntryActivityWorkspaceHeader.axml" />
+    <AndroidResource Include="Resources\layout\StartTimeEntryActivityNoEntityCell.axml" />
+    <AndroidResource Include="Resources\layout\StartTimeEntryActivityEmptyCell.axml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation\Toggl.Foundation.csproj">
@@ -416,6 +448,9 @@
       <Project>{5ACEB155-9DD4-4309-BCC9-997A09950393}</Project>
       <Name>Toggl.Ultrawave</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Presenters\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Fody.2.2.0\build\netstandard1.2\Fody.targets" Condition="Exists('..\packages\Fody.2.2.0\build\netstandard1.2\Fody.targets')" />

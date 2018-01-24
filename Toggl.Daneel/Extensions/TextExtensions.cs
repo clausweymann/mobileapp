@@ -53,16 +53,20 @@ namespace Toggl.Daneel.Extensions
             return result;
         }
 
-        public static NSMutableAttributedString GetAttachmentString(this string imageName, double fontHeight)
+        public static NSMutableAttributedString GetAttachmentString(
+            this string imageName,
+            double fontCapHeight,
+            UIImageRenderingMode renderingMode = UIImageRenderingMode.AlwaysTemplate)
         {
             var attachment = new NSTextAttachment
             {
-                Image = UIImage.FromBundle(imageName)
-                               .ImageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                Image = UIImage
+                    .FromBundle(imageName)
+                    .ImageWithRenderingMode(renderingMode)
             };
 
             var imageSize = attachment.Image.Size;
-            var y = (fontHeight - imageSize.Height) / 2;
+            var y = (fontCapHeight - imageSize.Height) / 2;
             attachment.Bounds = new CGRect(0, y, imageSize.Width, imageSize.Height);
 
             //There neeeds to be a space before the dot, otherwise the colors don't work

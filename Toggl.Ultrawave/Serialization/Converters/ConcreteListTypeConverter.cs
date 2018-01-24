@@ -4,7 +4,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Toggl.Multivac;
 
-namespace Toggl.Ultrawave.Serialization
+namespace Toggl.Ultrawave.Serialization.Converters
 {
     [Preserve(AllMembers=true)]
     class ConcreteListTypeConverter<TConcrete, TInterface> : JsonConverter

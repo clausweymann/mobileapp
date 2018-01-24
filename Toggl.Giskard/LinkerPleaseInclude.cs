@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Specialized;
 using System.Windows.Input;
 using Android.App;
@@ -114,6 +115,26 @@ namespace Toggl.Giskard
         {
             linearLayout = new FitWindowsLinearLayout(null);
             linearLayout = new FitWindowsLinearLayout(null, null);
+        }
+
+        public void Include(CardView cardView)
+        {
+            cardView = new CardView(null);
+            cardView = new CardView(null, null);
+            cardView = new CardView(null, null, 0);
+        }
+
+        public void Include(ConsoleColor color)
+        {
+            Console.Write("");
+            Console.WriteLine("");
+            color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = ConsoleColor.DarkGray;
         }
     }
 }

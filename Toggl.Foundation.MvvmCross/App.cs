@@ -68,7 +68,7 @@ namespace Toggl.Foundation.MvvmCross
                 return;
             }
 
-            var _ = dataSource.SyncManager.ForceFullSync();
+            var _ = dataSource.StartSyncing();
 
             await navigationService.Navigate<MainViewModel>();
         }

@@ -17,6 +17,7 @@ using Toggl.Multivac;
 using Toggl.Ultrawave.Exceptions;
 using Toggl.Ultrawave.Network;
 using Xunit;
+using static Toggl.Multivac.Extensions.EmailExtensions;
 
 namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 {
@@ -24,11 +25,11 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
     {
         public abstract class LoginViewModelTest : BaseViewModelTests<LoginViewModel>
         {
-            protected const string ValidEmail = "susancalvin@psychohistorian.museum";
-            protected const string InvalidEmail = "foo@";
+            protected readonly Email ValidEmail = Email.From("susancalvin@psychohistorian.museum");
+            protected readonly Email InvalidEmail = Email.From("foo@");
 
-            protected const string ValidPassword = "123456";
-            protected const string InvalidPassword = "";
+            protected readonly Password ValidPassword = Password.From("123456");
+            protected readonly Password InvalidPassword = Password.Empty;
 
             protected ILoginManager LoginManager { get; } = Substitute.For<ILoginManager>();
             protected IPasswordManagerService PasswordManagerService { get; } = Substitute.For<IPasswordManagerService>();
@@ -122,7 +123,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 public void ReturnsFalseWheThePasswordIsValidButTheViewIsLoading()
                 {
                     var never = Observable.Never<ITogglDataSource>();
-                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>()).Returns(never);
+                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>()).Returns(never);
                     ViewModel.Password = ValidPassword;
                     ViewModel.NextCommand.Execute();
 
@@ -244,7 +245,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                     ViewModel.NextCommand.Execute();
 
-                    LoginManager.DidNotReceive().Login(Arg.Any<Email>(), Arg.Any<string>());
+                    LoginManager.DidNotReceive().Login(Arg.Any<Email>(), Arg.Any<Password>());
                 }
 
                 [Fact, LogIfTooSlow]
@@ -254,7 +255,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                     ViewModel.NextCommand.Execute();
 
-                    LoginManager.Received().Login(Arg.Any<Email>(), Arg.Any<string>());
+                    LoginManager.Received().Login(Arg.Any<Email>(), Arg.Any<Password>());
                 }
 
                 [Fact, LogIfTooSlow]
@@ -265,7 +266,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                     ViewModel.NextCommand.Execute();
 
-                    LoginManager.Received().SignUp(Arg.Any<Email>(), Arg.Any<string>());
+                    LoginManager.Received().SignUp(Arg.Any<Email>(), Arg.Any<Password>());
                 }
 
                 [Fact, LogIfTooSlow]
@@ -273,21 +274,21 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 {
                     var scheduler = new TestScheduler();
                     var never = Observable.Never<ITogglDataSource>();
-                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>()).Returns(never);
+                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>()).Returns(never);
 
                     ViewModel.Password = ValidPassword;
                     ViewModel.NextCommand.Execute();
 
                     ViewModel.NextCommand.Execute();
 
-                    LoginManager.Received(1).Login(Arg.Any<Email>(), Arg.Any<string>());
+                    LoginManager.Received(1).Login(Arg.Any<Email>(), Arg.Any<Password>());
                 }
 
                 [Fact, LogIfTooSlow]
                 public void NavigatesToTheTimeEntriesViewModelWhenTheLoginSucceeds()
                 {
                     ViewModel.Password = ValidPassword;
-                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>())
                                 .Returns(Observable.Return(Substitute.For<ITogglDataSource>()));
 
                     ViewModel.NextCommand.Execute();
@@ -299,7 +300,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 public void StopsTheViewModelLoadStateWhenItCompletes()
                 {
                     ViewModel.Password = ValidPassword;
-                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>())
                                 .Returns(Observable.Return(Substitute.For<ITogglDataSource>()));
 
                     ViewModel.NextCommand.Execute();
@@ -311,7 +312,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 public void StopsTheViewModelLoadStateWhenItErrors()
                 {
                     ViewModel.Password = ValidPassword;
-                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>())
                                 .Returns(Observable.Throw<ITogglDataSource>(new Exception()));
 
                     ViewModel.NextCommand.Execute();
@@ -323,7 +324,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 public void DoesNotNavigateWhenTheLoginFails()
                 {
                     ViewModel.Password = ValidPassword;
-                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>())
                                 .Returns(Observable.Throw<ITogglDataSource>(new Exception()));
 
                     ViewModel.NextCommand.Execute();
@@ -586,9 +587,9 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
         }
 
-        public sealed class TheStartPasswordManagerCommandCommand : LoginViewModelTest
+        public sealed class TheStartPasswordManagerCommand : LoginViewModelTest
         {
-            public TheStartPasswordManagerCommandCommand()
+            public TheStartPasswordManagerCommand()
             {
                 PasswordManagerService.IsAvailable.Returns(true);
             }
@@ -643,7 +644,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     disposed: 100
                 );
 
-                LoginManager.Received().Login(Arg.Any<Email>(), Arg.Any<string>());
+                LoginManager.Received().Login(Arg.Any<Email>(), Arg.Any<Password>());
             }
 
             [Fact, LogIfTooSlow]
@@ -715,7 +716,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     disposed: 100
                 );
 
-                ViewModel.Password.Should().Be("");
+                ViewModel.Password.Should().Be(Password.Empty);
             }
 
             [Fact, LogIfTooSlow]
@@ -733,7 +734,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     disposed: 100
                 );
 
-                LoginManager.DidNotReceive().Login(Arg.Any<Email>(), Arg.Any<string>());
+                LoginManager.DidNotReceive().Login(Arg.Any<Email>(), Arg.Any<Password>());
             }
 
             private IObservable<PasswordManagerResult> arrangeCallToPasswordManagerWithValidCredentials()
@@ -760,7 +761,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             [Fact, LogIfTooSlow]
             public void IsFalseWhenLoginSucceeds()
             {
-                LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>())
                             .Returns(Observable.Return(DataSource));
                 ViewModel.Email = ValidEmail;
                 ViewModel.NextCommand.Execute();
@@ -779,7 +780,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 var notification = Notification.CreateOnError<ITogglDataSource>(exception);
                 var message = new Recorded<Notification<ITogglDataSource>>(0, notification);
                 var observable = scheduler.CreateColdObservable(message);
-                LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>())
                             .Returns(observable);
                 ViewModel.Email = ValidEmail;
                 ViewModel.NextCommand.Execute();
@@ -797,7 +798,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             [Fact, LogIfTooSlow]
             public void IsEmptyWhenLoginSucceeds()
             {
-                LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>())
                             .Returns(Observable.Return(DataSource));
                 ViewModel.Email = ValidEmail;
                 ViewModel.NextCommand.Execute();
@@ -816,7 +817,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 var notification = Notification.CreateOnError<ITogglDataSource>(exception);
                 var message = new Recorded<Notification<ITogglDataSource>>(0, notification);
                 var observable = scheduler.CreateColdObservable(message);
-                LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>())
                             .Returns(observable);
                 ViewModel.Email = ValidEmail;
                 ViewModel.NextCommand.Execute();
@@ -835,7 +836,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 var notification = Notification.CreateOnError<ITogglDataSource>(new Exception());
                 var message = new Recorded<Notification<ITogglDataSource>>(0, notification);
                 var observable = scheduler.CreateColdObservable(message);
-                LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>())
                             .Returns(observable);
                 ViewModel.Email = ValidEmail;
                 ViewModel.NextCommand.Execute();
@@ -876,7 +877,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 var notification = Notification.CreateOnError<ITogglDataSource>(new Exception());
                 var message = new Recorded<Notification<ITogglDataSource>>(0, notification);
                 var observable = scheduler.CreateColdObservable(message);
-                LoginManager.SignUp(Arg.Any<Email>(), Arg.Any<string>())
+                LoginManager.SignUp(Arg.Any<Email>(), Arg.Any<Password>())
                             .Returns(observable);
                 ViewModel.Prepare(LoginType.SignUp);
                 ViewModel.Email = ValidEmail;
@@ -904,7 +905,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                 [InlineData("something@something")]
                 public void IsForgotPasswordExplanationWhenEnteredEmailisntValid(string email)
                 {
-                    ViewModel.Email = email;
+                    ViewModel.Email = email.ToEmail();
                     ViewModel.ForgotPasswordCommand.Execute();
 
                     ViewModel.InfoText.Should().Be(Resources.PasswordResetExplanation);
@@ -1206,7 +1207,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             {
                 protected override void CallAndThrow(Exception e)
                 {
-                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<string>())
+                    LoginManager.Login(Arg.Any<Email>(), Arg.Any<Password>())
                         .Returns(_ => Observable.Throw<ITogglDataSource>(e));
 
                     ViewModel.Prepare(LoginType.Login);
@@ -1221,7 +1222,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             {
                 protected override void CallAndThrow(Exception e)
                 {
-                    LoginManager.SignUp(Arg.Any<Email>(), Arg.Any<string>())
+                    LoginManager.SignUp(Arg.Any<Email>(), Arg.Any<Password>())
                         .Returns(_ => Observable.Throw<ITogglDataSource>(e));
 
                     ViewModel.Prepare(LoginType.SignUp);

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -29,7 +31,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 var api = TogglApiWith(credentials);
 
                 var user = await api.User.Get();
-                user.Email.Should().Be(email.ToString());
+                user.Email.Should().Be(email);
             }
 
             [Fact, LogTestInfo]
@@ -113,12 +115,16 @@ namespace Toggl.Ultrawave.Tests.Integration
 
         public sealed class TheResetPasswordMethod : EndpointTestBase
         {
-            [Fact, LogTestInfo]
-            public void ThrowsIfTheEmailIsInvalid()
+            [Theory, LogTestInfo]
+            [ClassData(typeof(InvalidEmailTestData))]
+            public void ThrowsIfTheEmailIsInvalid(string emailString)
             {
                 var api = TogglApiWith(Credentials.None);
 
-                Action resetInvalidEmail = () => api.User.ResetPassword(Email.Invalid).Wait();
+                Action resetInvalidEmail = () => api
+                    .User
+                    .ResetPassword(Email.From(emailString))
+                    .Wait();
 
                 resetInvalidEmail.ShouldThrow<BadRequestException>();
             }
@@ -127,7 +133,7 @@ namespace Toggl.Ultrawave.Tests.Integration
             public void FailsIfUserDoesNotExist()
             {
                 var api = TogglApiWith(Credentials.None);
-                var email = Email.FromString($"{Guid.NewGuid().ToString()}@domain.com");
+                var email = Email.From($"{Guid.NewGuid().ToString()}@domain.com");
 
                 Action resetInvalidEmail = () => api.User.ResetPassword(email).Wait();
 
@@ -140,7 +146,7 @@ namespace Toggl.Ultrawave.Tests.Integration
                 var (_, user) = await SetupTestUser();
                 var api = TogglApiWith(Credentials.None);
 
-                var instructions = await api.User.ResetPassword(user.Email.ToEmail());
+                var instructions = await api.User.ResetPassword(user.Email);
 
                 instructions.Should().Be("Please check your inbox for further instructions");
             }
@@ -156,26 +162,26 @@ namespace Toggl.Ultrawave.Tests.Integration
             }
 
             [Fact, LogTestInfo]
-            public void ThrowsIfTheEmailIsNotValid()
+            public void ThrowsIfTheEmailIsEmpty()
             {
-                Action signingUp = () => unauthenticatedTogglApi.User.SignUp(Email.Invalid, "dummyButValidPassword").Wait();
+                Action signingUp = () => unauthenticatedTogglApi
+                    .User
+                    .SignUp(Email.Empty, "dummyButValidPassword".ToPassword())
+                    .Wait();
 
                 signingUp.ShouldThrow<ArgumentException>();
             }
 
             [Theory, LogTestInfo]
-            [InlineData("not an email")]
-            [InlineData("em@il")]
-            [InlineData("domain.com")]
-            [InlineData("thisIsNotAnEmail@.com")]
-            [InlineData("alsoNot@email.")]
-            [InlineData("double@at@email.com")]
-            [InlineData("so#close@yet%so.far")]
-            public void FailsWhenAnInvalidEmailIsForcedToTheApi(string invalidEmail)
+            [ClassData(typeof(InvalidEmailTestData))]
+            public void ThrowsWhenTheEmailIsNotValid(string emailString)
             {
-                Action signingUp = () => unauthenticatedTogglApi.User.SignUp(createInvalidEmail(invalidEmail), "dummyButValidPassword").Wait();
+                Action signingUp = () => unauthenticatedTogglApi
+                    .User
+                    .SignUp(Email.From(emailString), "dummyButValidPassword".ToPassword())
+                    .Wait();
 
-                signingUp.ShouldThrow<BadRequestException>();
+                signingUp.ShouldThrow<ArgumentException>();
             }
 
             [Theory, LogTestInfo]
@@ -191,7 +197,10 @@ namespace Toggl.Ultrawave.Tests.Integration
             [InlineData("1@bX_")]
             public void FailsWhenThePasswordIsTooShort(string empty)
             {
-                Action signingUp = () => unauthenticatedTogglApi.User.SignUp(Email.FromString("dummy@email.com"), empty).Wait();
+                Action signingUp = () => unauthenticatedTogglApi
+                    .User
+                    .SignUp(Email.From("dummy@email.com"), empty.ToPassword())
+                    .Wait();
 
                 signingUp.ShouldThrow<BadRequestException>();
             }
@@ -203,31 +212,38 @@ namespace Toggl.Ultrawave.Tests.Integration
             [InlineData("            ")]
             public async Task SucceedsForAPasswordConsistingOfOnlyWhiteCharactersWhenItIsLongEnough(string seeminglyEmpty)
             {
-                var email = Email.FromString($"{Guid.NewGuid().ToString()}@email.com");
+                var email = Email.From($"{Guid.NewGuid().ToString()}@email.com");
 
-                var user = await unauthenticatedTogglApi.User.SignUp(email, seeminglyEmpty);
+                var user = await unauthenticatedTogglApi
+                    .User
+                    .SignUp(email, seeminglyEmpty.ToPassword());
 
                 user.Id.Should().BeGreaterThan(0);
-                user.Email.Should().Be(email.ToString());
+                user.Email.Should().Be(email);
             }
 
             [Fact, LogTestInfo]
             public async Task CreatesANewUserAccount()
             {
-                var emailAddress = Email.FromString($"{Guid.NewGuid().ToString()}@address.com");
+                var emailAddress = Email.From($"{Guid.NewGuid().ToString()}@address.com");
 
-                var user = await unauthenticatedTogglApi.User.SignUp(emailAddress, "somePassword");
+                var user = await unauthenticatedTogglApi
+                    .User
+                    .SignUp(emailAddress, "somePassword".ToPassword());
 
-                user.Email.Should().Be(emailAddress.ToString());
+                user.Email.Should().Be(emailAddress);
             }
 
             [Fact, LogTestInfo]
             public async Task FailsWhenTheEmailIsAlreadyTaken()
             {
-                var email = Email.FromString($"{Guid.NewGuid().ToString()}@address.com");
-                await unauthenticatedTogglApi.User.SignUp(email, "somePassword");
+                var email = Email.From($"{Guid.NewGuid().ToString()}@address.com");
+                await unauthenticatedTogglApi.User.SignUp(email, "somePassword".ToPassword());
 
-                Action secondSigningUp = () => unauthenticatedTogglApi.User.SignUp(email, "thePasswordIsNotImportant").Wait();
+                Action secondSigningUp = () => unauthenticatedTogglApi
+                    .User
+                    .SignUp(email, "thePasswordIsNotImportant".ToPassword())
+                    .Wait();
 
                 secondSigningUp.ShouldThrow<BadRequestException>();
             }
@@ -235,8 +251,8 @@ namespace Toggl.Ultrawave.Tests.Integration
             [Fact, LogTestInfo]
             public async Task FailsWhenSigningUpWithTheSameEmailAndPasswordForTheSecondTime()
             {
-                var email = Email.FromString($"{Guid.NewGuid().ToString()}@address.com");
-                var password = "somePassword";
+                var email = Email.From($"{Guid.NewGuid().ToString()}@address.com");
+                var password = "somePassword".ToPassword();
                 await unauthenticatedTogglApi.User.SignUp(email, password);
 
                 Action secondSigningUp = () => unauthenticatedTogglApi.User.SignUp(email, password).Wait();
@@ -247,8 +263,8 @@ namespace Toggl.Ultrawave.Tests.Integration
             [Fact, LogTestInfo]
             public async Task EnablesLoginForTheNewlyCreatedUserAccount()
             {
-                var emailAddress = Email.FromString($"{Guid.NewGuid().ToString()}@address.com");
-                var password = Guid.NewGuid().ToString();
+                var emailAddress = Email.From($"{Guid.NewGuid().ToString()}@address.com");
+                var password = Guid.NewGuid().ToString().ToPassword();
 
                 var signedUpUser = await unauthenticatedTogglApi.User.SignUp(emailAddress, password);
                 var credentials = Credentials.WithPassword(emailAddress, password);
@@ -264,8 +280,8 @@ namespace Toggl.Ultrawave.Tests.Integration
             [InlineData("žížala", "Žížala's workspace")]
             public async Task CreatesADefaultWorkspaceWithCorrectName(string emailPrefix, string expectedWorkspaceName)
             {
-                var email = Email.FromString($"{emailPrefix}@{Guid.NewGuid().ToString()}.com");
-                var password = Guid.NewGuid().ToString();
+                var email = Email.From($"{emailPrefix}@{Guid.NewGuid().ToString()}.com");
+                var password = Guid.NewGuid().ToString().ToPassword();
 
                 var user = await unauthenticatedTogglApi.User.SignUp(email, password);
                 var credentials = Credentials.WithPassword(email, password);
@@ -274,12 +290,6 @@ namespace Toggl.Ultrawave.Tests.Integration
 
                 workspace.Id.Should().BeGreaterThan(0);
                 workspace.Name.Should().Be(expectedWorkspaceName);
-            }
-
-            private Email createInvalidEmail(string invalidEmailAddress)
-            {
-                var constructor = typeof(Email).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)[0];
-                return (Email)constructor.Invoke(new object[] { invalidEmailAddress });
             }
         }
 
@@ -311,6 +321,31 @@ namespace Toggl.Ultrawave.Tests.Integration
 
                 return api.User.Update(entityWithUpdates);
             }
+        }
+
+        private sealed class InvalidEmailTestData : IEnumerable<object[]>
+        {
+            private List<object[]> emailStrings;
+
+            public InvalidEmailTestData()
+            {
+                emailStrings = new List<object[]>
+                {
+                    new[] { "" },
+                    new[] { "not an email" },
+                    new[] { "em@il" },
+                    new[] { "domain.com" },
+                    new[] { "thisIsNotAnEmail@.com" },
+                    new[] { "alsoNot@email." },
+                    new[] { "double@at@email.com" },
+                    new[] { "so#close@yet%so.far" }
+                };
+            }
+
+            public IEnumerator<object[]> GetEnumerator()
+                => emailStrings.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 }

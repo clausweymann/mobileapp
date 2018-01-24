@@ -14,6 +14,13 @@
                 <outlet property="CalendarCollectionView" destination="Btd-Jn-XOm" id="SsE-No-P8p"/>
                 <outlet property="CurrentMonthLabel" destination="yuU-AX-i2k" id="OZC-Z9-uKf"/>
                 <outlet property="CurrentYearLabel" destination="CIL-xs-8Kb" id="0Vf-WN-4mC"/>
+                <outlet property="DayHeader0" destination="btF-zj-slk" id="ZYL-1X-xFq"/>
+                <outlet property="DayHeader1" destination="GwA-Km-GjT" id="8fw-xy-22I"/>
+                <outlet property="DayHeader2" destination="03c-o6-QKN" id="5MQ-da-ydN"/>
+                <outlet property="DayHeader3" destination="OWQ-5X-vQr" id="yFe-0g-yY0"/>
+                <outlet property="DayHeader4" destination="BfB-xL-3Y9" id="cQ5-NX-yQS"/>
+                <outlet property="DayHeader5" destination="lTt-YN-ySt" id="e6R-8i-IUV"/>
+                <outlet property="DayHeader6" destination="4Jf-jb-Dxp" id="9Jq-9Q-OAP"/>
                 <outlet property="QuickSelectCollectionView" destination="T1C-Ey-wjY" id="n92-T6-7Ja"/>
                 <outlet property="QuickSelectCollectionViewLayout" destination="aht-yH-mh5" id="fAZ-tA-9TO"/>
                 <outlet property="view" destination="2" id="RRd-Eg-VrN"/>

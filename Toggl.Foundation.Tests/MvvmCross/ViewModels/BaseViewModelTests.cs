@@ -16,6 +16,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
         protected ITimeService TimeService { get; } = Substitute.For<ITimeService>();
         protected ITogglDatabase Database { get; } = Substitute.For<ITogglDatabase>();
         protected ITogglDataSource DataSource { get; } = Substitute.For<ITogglDataSource>();
+        protected IPlatformConstants PlatformConstants { get; } = Substitute.For<IPlatformConstants>();
 
         protected IOnboardingStorage OnboardingStorage { get; } = Substitute.For<IOnboardingStorage>();
 

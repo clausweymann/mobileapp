@@ -19,13 +19,14 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private readonly ITogglDataSource dataSource;
         private readonly IDialogService dialogService;
+        private readonly IPlatformConstants platformConstants;
         private readonly IMvxNavigationService navigationService;
 
         private long workspaceId;
 
         public string Title { get; private set; } = Resources.Settings;
 
-        public string Email { get; private set; } = "";
+        public Email Email { get; private set; }
 
         public string Version { get; private set; } = "";
 
@@ -65,15 +66,21 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public IMvxCommand ToggleUseTwentyFourHourClockCommand { get; }
 
-        public SettingsViewModel(ITogglDataSource dataSource, IMvxNavigationService navigationService, IDialogService dialogService)
+        public SettingsViewModel(
+            ITogglDataSource dataSource,
+            IMvxNavigationService navigationService,
+            IDialogService dialogService,
+            IPlatformConstants platformConstants)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
-            Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
             Ensure.Argument.IsNotNull(dialogService, nameof(dialogService));
+            Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
+            Ensure.Argument.IsNotNull(platformConstants, nameof(platformConstants));
 
             this.dataSource = dataSource;
             this.dialogService = dialogService;
             this.navigationService = navigationService;
+            this.platformConstants = platformConstants;
 
             disposeBag.Add(dataSource.SyncManager
                 .ProgressObservable
@@ -109,7 +116,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public void rate() => throw new NotImplementedException();
 
-        public void help() => throw new NotImplementedException();
+        public void help() => navigationService
+            .Navigate<BrowserViewModel, BrowserParameters>(
+                BrowserParameters.WithUrlAndTitle(platformConstants.HelpUrl, Resources.Help));
 
         public void update() => throw new NotImplementedException();
 
