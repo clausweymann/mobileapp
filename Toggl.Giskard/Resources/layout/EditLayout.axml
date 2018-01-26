@@ -166,14 +166,12 @@
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/EditBillableSwitch"
         local:MvxBind="Checked Billable"
+        android:theme="@style/TogglBlueSwitch"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_below="@id/EditAddTagsLabel"
         android:layout_marginRight="18dp"
-        android:layout_alignParentRight="true"
-        android:thumbTint="@color/buttonBlue"
-        android:trackTint="@color/buttonBlue"
-        android:checked="false" />
+        android:layout_alignParentRight="true" />
     <View
         android:background="@color/separator"
         android:layout_width="match_parent"
