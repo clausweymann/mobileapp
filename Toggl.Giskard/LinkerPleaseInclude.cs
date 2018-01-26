@@ -6,6 +6,7 @@ using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using MvvmCross.Binding.BindingContext;
+using MvvmCross.Binding.Droid.Target;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
 
@@ -15,6 +16,8 @@ namespace Toggl.Giskard
     // are preserved in the deployed app
     public class LinkerPleaseInclude
     {
+        private MvxCompoundButtonCheckedTargetBinding binding = new MvxCompoundButtonCheckedTargetBinding(null, null);
+
         public void Include(Button button)
         {
             button.Click += (s,e) => button.Text = button.Text + "";
@@ -26,6 +29,11 @@ namespace Toggl.Giskard
         }
         
         public void Include(Switch @switch)
+        {
+            @switch.CheckedChange += (sender, args) => @switch.Checked = !@switch.Checked;
+        }
+
+        public void Include(SwitchCompat @switch)
         {
             @switch.CheckedChange += (sender, args) => @switch.Checked = !@switch.Checked;
         }

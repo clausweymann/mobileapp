@@ -27,14 +27,19 @@ namespace Toggl.Giskard
                 view => new ViewMarginTargetBinding(view, ViewMarginTargetBinding.BoundMargin.Bottom)
             );
 
+            registry.RegisterCustomBindingFactory<View>(
+                DrawableColorTargetBinding.BindingName,
+                view => new DrawableColorTargetBinding(view)
+            );
+
             registry.RegisterCustomBindingFactory<EditText>(
                 EditTextFocusTargetBinding.BindingName,
                 view => new EditTextFocusTargetBinding(view)
             );
 
-            registry.RegisterCustomBindingFactory<View>(
-                DrawableColorTargetBinding.BindingName,
-                view => new DrawableColorTargetBinding(view)
+            registry.RegisterCustomBindingFactory<TextView>(
+                TextViewTagListTargetBinding.BindingName,
+                view => new TextViewTagListTargetBinding(view)
             );
 
             registry.RegisterCustomBindingFactory<View>(

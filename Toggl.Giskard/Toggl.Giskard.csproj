@@ -218,6 +218,8 @@
     <Compile Include="Extensions\VisibilityExtensions.cs" />
     <Compile Include="Activities\BrowserActivity.cs" />
     <Compile Include="Extensions\CircularRevealAnimation.cs" />
+    <Compile Include="Activities\EditTimeEntryActivity.cs" />
+    <Compile Include="Bindings\TextViewTagListTargetBinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -410,7 +412,6 @@
     <AndroidResource Include="Resources\layout\SuggestionsFragmentCard.axml" />
     <AndroidResource Include="Resources\layout\MainRunningTimeEntry.axml" />
     <AndroidResource Include="Resources\layout\SettingsActivity.axml" />
-    <AndroidResource Include="Resources\layout\EditLayout.axml" />
     <AndroidResource Include="Resources\layout\BrowserActivity.axml" />
     <AndroidResource Include="Resources\layout\TimeEntriesLogFragmentFooter.axml" />
     <AndroidResource Include="Resources\drawable\TopShadow.xml" />
@@ -422,6 +423,7 @@
     <AndroidResource Include="Resources\layout\StartTimeEntryActivityWorkspaceHeader.axml" />
     <AndroidResource Include="Resources\layout\StartTimeEntryActivityNoEntityCell.axml" />
     <AndroidResource Include="Resources\layout\StartTimeEntryActivityEmptyCell.axml" />
+    <AndroidResource Include="Resources\layout\EditLayout.axml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation\Toggl.Foundation.csproj">

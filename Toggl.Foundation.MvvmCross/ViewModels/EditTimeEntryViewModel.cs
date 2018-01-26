@@ -66,6 +66,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public DateTimeOffset StartTime { get; set; }
 
+        [DependsOn(nameof(StopTime))]
+        public bool IsTimeEntryRunning => !StopTime.HasValue;
+
         private DateTimeOffset? stopTime;
         public DateTimeOffset? StopTime
         {
