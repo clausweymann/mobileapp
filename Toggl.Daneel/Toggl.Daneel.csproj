@@ -532,7 +532,6 @@
     </Compile>
     <Compile Include="Extensions\TextExtensions.cs" />
     <Compile Include="Views\MainScrollView.cs" />
-    <Compile Include="Views\ResizableView.cs" />
     <Compile Include="ViewControllers\SelectProjectViewController.cs" />
     <Compile Include="ViewControllers\SelectProjectViewController.designer.cs">
       <DependentUpon>SelectProjectViewController.cs</DependentUpon>
@@ -725,9 +724,13 @@
     <Compile Include="Views\StartTimeEntry\NoEntityInfoViewCell.designer.cs">
       <DependentUpon>NoEntityInfoViewCell.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\EditDuration\WheelBackgroundView.cs" />
+    <Compile Include="Views\EditDuration\BaseWheelView.cs" />
+    <Compile Include="Views\EditDuration\WheelForegroundView.cs" />
     <Compile Include="Extensions\NoEntityInfoMessageExtensions.cs" />
     <Compile Include="Views\Reports\LoadingPieChartView.cs" />
     <Compile Include="PlatformConstants.cs" />
+    <Compile Include="Extensions\PointExtensions.cs" />
     <Compile Include="Services\MailService.cs" />
   </ItemGroup>
   <ItemGroup>
