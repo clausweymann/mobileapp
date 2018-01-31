@@ -2,10 +2,7 @@
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
-using Android.OS;
 using Android.Views;
-using MvvmCross.Platform;
-using MvvmCross.Platform.Droid.Platform;
 
 namespace Toggl.Giskard.Dialogs
 {
