@@ -29,7 +29,7 @@ namespace Toggl.Giskard.Dialogs
 
             var dialog = new DatePickerDialog(
                 context, onDateSet, 
-                date.Year, date.Month, date.Day);
+                date.Year, date.Month - 1, date.Day);
 
             dialog.Show();
 

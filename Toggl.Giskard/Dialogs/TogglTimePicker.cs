@@ -30,8 +30,9 @@ namespace Toggl.Giskard.Dialogs
 
             hasRun = true;
 
-            var dialog = new TimePickerDialog(context, onTimeSet,
-                                              date.Hour, date.Minute, is24hourView);
+            var dialog = new TimePickerDialog(
+                context, onTimeSet,
+                date.Hour, date.Minute, is24hourView);
 
             dialog.Show();
 
