@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Views;
+using MvvmCross.Platform.WeakSubscription;
 
 namespace Toggl.Giskard.Dialogs
 {
     public sealed class TogglTimePicker
     {
-        private TaskCompletionSource<DateTimeOffset> completionSource;
-        private Context context;
-        private DateTimeOffset date;
-        private bool is24hourView;
+        private readonly TaskCompletionSource<DateTimeOffset> completionSource = new TaskCompletionSource<DateTimeOffset>();
+        private readonly Context context;
+        private readonly DateTimeOffset date;
+        private readonly bool is24hourView;
+        private bool hasRun;
 
         public TogglTimePicker(Context context, DateTimeOffset? date, bool is24hourView = true)
         {
@@ -20,14 +23,15 @@ namespace Toggl.Giskard.Dialogs
             this.is24hourView = is24hourView;
         }
 
-        public Task<DateTimeOffset> Show(string title = "")
+        public Task<DateTimeOffset> Show()
         {
-            completionSource = new TaskCompletionSource<DateTimeOffset>();
+            if (hasRun)
+                throw new InvalidOperationException("Show should only be called once.");
+
+            hasRun = true;
 
             var dialog = new TimePickerDialog(context, onTimeSet,
                                               date.Hour, date.Minute, is24hourView);
-
-            dialog.SetTitle(title);
 
             dialog.Show();
 
@@ -46,10 +50,12 @@ namespace Toggl.Giskard.Dialogs
 
     public static class TogglTimePickerExtensions
     {
-        public static void BindTimePickerToClick(this View view, DateTimeOffset? initialValue, Action<DateTimeOffset> onTimeSelected)
+        public static IDisposable BindTimePickerToClick(this View view, DateTimeOffset? initialValue, Action<DateTimeOffset> onTimeSelected)
         {
-            view.Click += async (s, e) =>
+            return view.WeakSubscribe(nameof(view.Click), async (sender, e) =>
+            {
                 onTimeSelected(await new TogglTimePicker(view.Context, initialValue).Show());
+            });
         }
     }
 }

@@ -3,14 +3,16 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Views;
+using MvvmCross.Platform.WeakSubscription;
 
 namespace Toggl.Giskard.Dialogs
 {
     public sealed class TogglDatePicker
     {
-        private TaskCompletionSource<DateTimeOffset> completionSource;
-        private Context context;
-        private DateTimeOffset date;
+        private readonly TaskCompletionSource<DateTimeOffset> completionSource = new TaskCompletionSource<DateTimeOffset>();
+        private readonly Context context;
+        private readonly DateTimeOffset date;
+        private bool hasRun;
 
         public TogglDatePicker(Context context, DateTimeOffset? date)
         {
@@ -18,15 +20,16 @@ namespace Toggl.Giskard.Dialogs
             this.date = date?? DateTimeOffset.Now;
         }
 
-        public Task<DateTimeOffset> Show(string title = "")
+        public Task<DateTimeOffset> Show()
         {
-            completionSource = new TaskCompletionSource<DateTimeOffset>();
+            if (hasRun) 
+                throw new InvalidOperationException("Show should only be called once.");
+
+            hasRun = true;
 
             var dialog = new DatePickerDialog(
                 context, onDateSet, 
                 date.Year, date.Month, date.Day);
-
-            dialog.SetTitle(title);
 
             dialog.Show();
 
@@ -45,10 +48,12 @@ namespace Toggl.Giskard.Dialogs
 
     public static class TogglDatePickerExtensions
     {
-        public static void BindDatePickerToClick(this View view, DateTimeOffset? initialValue, Action<DateTimeOffset> onDateSelected)
+        public static IDisposable BindDatePickerToClick(this View view, DateTimeOffset? initialValue, Action<DateTimeOffset> onTimeSelected)
         {
-            view.Click += async (s, e) =>
-                onDateSelected(await new TogglDatePicker(view.Context, initialValue).Show());
+            return view.WeakSubscribe(nameof(view.Click), async (sender, e) =>
+            {
+                onTimeSelected(await new TogglDatePicker(view.Context, initialValue).Show());
+            });
         }
     }
 }
