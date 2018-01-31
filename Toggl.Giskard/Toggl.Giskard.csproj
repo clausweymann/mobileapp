@@ -225,6 +225,8 @@
     <Compile Include="Views\StartTimeEntryRecyclerView.cs" />
     <Compile Include="Adapters\StartTimeEntryRecyclerAdapter.cs" />
     <Compile Include="Adapters\SegmentedRecyclerAdapter.cs" />
+    <Compile Include="Dialogs\TogglDatePicker.cs" />
+    <Compile Include="Dialogs\TogglTimePicker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -459,6 +461,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Presenters\" />
+    <Folder Include="Dialogs\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Fody.2.2.0\build\netstandard1.2\Fody.targets" Condition="Exists('..\packages\Fody.2.2.0\build\netstandard1.2\Fody.targets')" />
