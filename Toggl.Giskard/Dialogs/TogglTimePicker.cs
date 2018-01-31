@@ -50,11 +50,11 @@ namespace Toggl.Giskard.Dialogs
 
     public static class TogglTimePickerExtensions
     {
-        public static IDisposable BindTimePickerToClick(this View view, DateTimeOffset? initialValue, Action<DateTimeOffset> onTimeSelected, bool is24hourView = true)
+        public static IDisposable BindTimePickerToClick(this View view, Func<DateTimeOffset?> initialValueSelector, Action<DateTimeOffset> onTimeSelected, bool is24hourView = true)
         {
             return view.WeakSubscribe(nameof(view.Click), async (sender, e) =>
             {
-                onTimeSelected(await new TogglTimePicker(view.Context, initialValue, is24hourView).Show());
+                onTimeSelected(await new TogglTimePicker(view.Context, initialValueSelector(), is24hourView).Show());
             });
         }
     }

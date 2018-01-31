@@ -48,11 +48,11 @@ namespace Toggl.Giskard.Dialogs
 
     public static class TogglDatePickerExtensions
     {
-        public static IDisposable BindDatePickerToClick(this View view, DateTimeOffset? initialValue, Action<DateTimeOffset> onTimeSelected)
+        public static IDisposable BindDatePickerToClick(this View view, Func<DateTimeOffset?> initialValueSelector, Action<DateTimeOffset> onTimeSelected)
         {
             return view.WeakSubscribe(nameof(view.Click), async (sender, e) =>
             {
-                onTimeSelected(await new TogglDatePicker(view.Context, initialValue).Show());
+                onTimeSelected(await new TogglDatePicker(view.Context, initialValueSelector()).Show());
             });
         }
     }
