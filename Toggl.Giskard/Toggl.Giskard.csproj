@@ -173,6 +173,18 @@
     <Reference Include="Xamarin.Android.Support.v7.CardView">
       <HintPath>..\packages\Xamarin.Android.Support.v7.CardView.26.1.0.1\lib\MonoAndroid80\Xamarin.Android.Support.v7.CardView.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AppCenter.Android.Bindings">
+      <HintPath>..\packages\Microsoft.AppCenter.1.2.0\lib\MonoAndroid403\Microsoft.AppCenter.Android.Bindings.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AppCenter">
+      <HintPath>..\packages\Microsoft.AppCenter.1.2.0\lib\MonoAndroid403\Microsoft.AppCenter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AppCenter.Crashes.Android.Bindings">
+      <HintPath>..\packages\Microsoft.AppCenter.Crashes.1.2.0\lib\MonoAndroid403\Microsoft.AppCenter.Crashes.Android.Bindings.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AppCenter.Crashes">
+      <HintPath>..\packages\Microsoft.AppCenter.Crashes.1.2.0\lib\MonoAndroid403\Microsoft.AppCenter.Crashes.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -227,6 +239,12 @@
     <Compile Include="Adapters\SegmentedRecyclerAdapter.cs" />
     <Compile Include="Dialogs\TogglDatePicker.cs" />
     <Compile Include="Dialogs\TogglTimePicker.cs" />
+    <Compile Include="Autocomplete\AutocompleteTextWatcher.cs" />
+    <Compile Include="Autocomplete\TokenExtensions.cs" />
+    <Compile Include="Autocomplete\TokenSpan.cs" />
+    <Compile Include="Bindings\EditTextTextFieldInfoTargetBinding.cs" />
+    <Compile Include="Autocomplete\ProjectTokenSpan.cs" />
+    <Compile Include="Autocomplete\TagsTokenSpan.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
