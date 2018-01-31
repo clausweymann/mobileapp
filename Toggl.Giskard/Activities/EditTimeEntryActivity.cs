@@ -5,7 +5,10 @@ using Android.Support.V7.Widget;
 using MvvmCross.Droid.Support.V7.AppCompat;
 using MvvmCross.Droid.Views.Attributes;
 using Toggl.Foundation.MvvmCross.ViewModels;
+using Toggl.Giskard.Fragments;
+using Toggl.Giskard.Dialogs;
 using static Android.Support.V7.Widget.Toolbar;
+using TextView = Android.Widget.TextView;
 
 namespace Toggl.Giskard.Activities
 {
@@ -13,6 +16,10 @@ namespace Toggl.Giskard.Activities
     [Activity(Theme = "@style/AppTheme")]
     public class EditTimeEntryActivity : MvxAppCompatActivity<EditTimeEntryViewModel>
     {
+        private IDisposable startDateDisposable;
+        private IDisposable startTimeDisposable;
+        private IDisposable stopTimeDisposable;
+        
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -21,6 +28,15 @@ namespace Toggl.Giskard.Activities
             OverridePendingTransition(Resource.Animation.abc_fade_in, Resource.Animation.abc_fade_out);
 
             setupToolbar();
+
+            startDateDisposable = FindViewById<TextView>(Resource.Id.EditDateValueLabel)
+                .BindDatePickerToClick(ViewModel.StartTime, dateTime => ViewModel.StartTime = dateTime);
+            
+            startTimeDisposable = FindViewById<TextView>(Resource.Id.EditStartValueLabel)
+                .BindTimePickerToClick(ViewModel.StartTime, dateTime => ViewModel.StartTime = dateTime);
+
+            stopTimeDisposable = FindViewById<TextView>(Resource.Id.EditEndValueLabel)
+                .BindTimePickerToClick(ViewModel.StopTime, dateTime => ViewModel.StopTime = dateTime);
         }
 
         private void setupToolbar()
@@ -40,5 +56,21 @@ namespace Toggl.Giskard.Activities
         {
             ViewModel.CloseCommand.Execute();
         }
+
+        public override void Finish()
+        {
+            base.Finish();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            startDateDisposable.Dispose();
+            startTimeDisposable.Dispose();
+            stopTimeDisposable.Dispose();
+
+            base.Dispose(disposing);
+        }
     }
+
+
 }
