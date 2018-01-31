@@ -30,13 +30,19 @@ namespace Toggl.Giskard.Activities
             setupToolbar();
 
             startDateDisposable = FindViewById<TextView>(Resource.Id.EditDateValueLabel)
-                .BindDatePickerToClick(ViewModel.StartTime, dateTime => ViewModel.StartTime = dateTime);
+                .BindDatePickerToClick(
+                    () => ViewModel.StartTime, 
+                    dateTime => ViewModel.StartTime = dateTime);
             
             startTimeDisposable = FindViewById<TextView>(Resource.Id.EditStartValueLabel)
-                .BindTimePickerToClick(ViewModel.StartTime, dateTime => ViewModel.StartTime = dateTime);
+                .BindTimePickerToClick(
+                    () => ViewModel.StartTime, 
+                    dateTime => ViewModel.StartTime = dateTime);
 
             stopTimeDisposable = FindViewById<TextView>(Resource.Id.EditEndValueLabel)
-                .BindTimePickerToClick(ViewModel.StopTime, dateTime => ViewModel.StopTime = dateTime);
+                .BindTimePickerToClick(
+                    () => ViewModel.StopTime, 
+                    dateTime => ViewModel.StopTime = dateTime);
         }
 
         private void setupToolbar()
