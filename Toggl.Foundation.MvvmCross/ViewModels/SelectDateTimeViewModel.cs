@@ -5,6 +5,7 @@ using MvvmCross.Core.ViewModels;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Multivac;
 using Toggl.Multivac.Extensions;
+using PickerMode = Toggl.Foundation.MvvmCross.Parameters.DatePickerParameters.PickerMode;
 
 namespace Toggl.Foundation.MvvmCross.ViewModels
 {
@@ -15,11 +16,18 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         private readonly IMvxNavigationService navigationService;
 
-        public DateTimeOffset CurrentDateTime { get; set; }
+        private DateTimeOffset currentDateTime;
+        public DateTimeOffset CurrentDateTime
+        {
+            get => currentDateTime;
+            set => currentDateTime = convert(value);
+        }
 
         public DateTimeOffset MinDate { get; private set; }
 
         public DateTimeOffset MaxDate { get; private set; }
+       
+        public PickerMode Mode { get; private set; }
 
         public IMvxAsyncCommand CloseCommand { get; }
 
@@ -42,9 +50,29 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public override void Prepare(DatePickerParameters parameter)
         {
+            Mode = parameter.Mode;
             MinDate = parameter.MinDate;
             MaxDate = parameter.MaxDate;
             CurrentDateTime = defaultResult = parameter.CurrentDate;
+        }
+
+        private DateTimeOffset convert(DateTimeOffset offset)
+        {
+            switch (Mode)
+            {
+                case PickerMode.Date:
+                    return new DateTimeOffset(offset.Year, offset.Month, offset.Day,
+                                              currentDateTime.Hour, currentDateTime.Minute, currentDateTime.Second, 
+                                              currentDateTime.Offset);
+                case PickerMode.Time:
+                    return new DateTimeOffset(currentDateTime.Year, currentDateTime.Month, currentDateTime.Day,
+                                              offset.Hour, offset.Minute, offset.Second, 
+                                              currentDateTime.Offset);
+                case PickerMode.DateTime:
+                    return offset;
+                default:
+                    throw new NotSupportedException("Invalid DateTimePicker mode");
+            }
         }
 
         private Task close() => navigationService.Close(this, defaultResult);
