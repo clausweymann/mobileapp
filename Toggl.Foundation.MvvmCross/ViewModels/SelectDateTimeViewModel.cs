@@ -20,7 +20,15 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         public DateTimeOffset CurrentDateTime
         {
             get => currentDateTime;
-            set => currentDateTime = convert(value);
+            set
+            {
+                var newValue = convert(value);
+                if (currentDateTime == newValue) return;
+
+                currentDateTime = newValue;
+
+                RaisePropertyChanged(nameof(CurrentDateTime));
+            }
         }
 
         public DateTimeOffset MinDate { get; private set; }
