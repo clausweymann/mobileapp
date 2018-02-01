@@ -232,9 +232,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                         : StopTime.Value > currentTime ? currentTime : StopTime.Value;
             var minDate = maxDate.AddHours(-MaxTimeEntryDurationInHours);
 
-            var parameters = DatePickerParameters.WithDates(StartTime, minDate, maxDate);
+            var parameters = DateTimePickerParameters.WithDates(DateTimePickerMode.DateTime, StartTime, minDate, maxDate);
             StartTime = await navigationService
-                .Navigate<SelectDateTimeViewModel, DatePickerParameters, DateTimeOffset>(parameters)
+                .Navigate<SelectDateTimeViewModel, DateTimePickerParameters, DateTimeOffset>(parameters)
                 .ConfigureAwait(false);
         }
 

@@ -180,7 +180,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 var parameterToReturn = now.AddHours(-2);
                 NavigationService
-                    .Navigate<SelectDateTimeViewModel, DatePickerParameters, DateTimeOffset>(Arg.Any<DatePickerParameters>())
+                    .Navigate<SelectDateTimeViewModel, DateTimePickerParameters, DateTimeOffset>(Arg.Any<DateTimePickerParameters>())
                     .Returns(parameterToReturn);
                 ConfigureEditedTimeEntry(now, true);
                 ViewModel.Prepare(Id);
@@ -189,8 +189,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 NavigationService
                     .Received()
-                    .Navigate<SelectDateTimeViewModel, DatePickerParameters, DateTimeOffset>(
-                        Arg.Is<DatePickerParameters>(p => p.MaxDate == now));
+                    .Navigate<SelectDateTimeViewModel, DateTimePickerParameters, DateTimeOffset>(
+                        Arg.Is<DateTimePickerParameters>(p => p.MaxDate == now));
             }
 
             [Property]
@@ -203,7 +203,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 var parameterToReturn = now.AddHours(-2);
                 NavigationService
-                    .Navigate<SelectDateTimeViewModel, DatePickerParameters, DateTimeOffset>(Arg.Any<DatePickerParameters>())
+                    .Navigate<SelectDateTimeViewModel, DateTimePickerParameters, DateTimeOffset>(Arg.Any<DateTimePickerParameters>())
                     .Returns(parameterToReturn);
                 ConfigureEditedTimeEntry(now);
                 ViewModel.Prepare(Id);
@@ -212,8 +212,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 NavigationService
                     .Received()
-                    .Navigate<SelectDateTimeViewModel, DatePickerParameters, DateTimeOffset>(
-                        Arg.Is<DatePickerParameters>(p => p.MinDate == now.AddHours(-2)));
+                    .Navigate<SelectDateTimeViewModel, DateTimePickerParameters, DateTimeOffset>(
+                        Arg.Is<DateTimePickerParameters>(p => p.MinDate == now.AddHours(-2)));
             }
 
             [Property]
@@ -226,8 +226,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 var parameterToReturn = now.AddHours(-2);
                 NavigationService
-                    .Navigate<SelectDateTimeViewModel, DatePickerParameters, DateTimeOffset>(
-                        Arg.Any<DatePickerParameters>())
+                    .Navigate<SelectDateTimeViewModel, DateTimePickerParameters, DateTimeOffset>(
+                        Arg.Any<DateTimePickerParameters>())
                     .Returns(parameterToReturn);
                 ConfigureEditedTimeEntry(now);
                 ViewModel.Prepare(Id);
@@ -236,8 +236,8 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 NavigationService
                     .Received()
-                    .Navigate<SelectDateTimeViewModel, DatePickerParameters, DateTimeOffset>(
-                        Arg.Is<DatePickerParameters>(p => p.MaxDate == p.MaxDate.AddHours(-MaxTimeEntryDurationInHours)));
+                    .Navigate<SelectDateTimeViewModel, DateTimePickerParameters, DateTimeOffset>(
+                        Arg.Is<DateTimePickerParameters>(p => p.MaxDate == p.MaxDate.AddHours(-MaxTimeEntryDurationInHours)));
             }
 
             [Property]
@@ -248,7 +248,7 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
 
                 var parameterToReturn = now.AddHours(-2);
                 NavigationService
-                    .Navigate<SelectDateTimeViewModel, DatePickerParameters, DateTimeOffset>(Arg.Any<DatePickerParameters>())
+                    .Navigate<SelectDateTimeViewModel, DateTimePickerParameters, DateTimeOffset>(Arg.Any<DateTimePickerParameters>())
                     .Returns(parameterToReturn);
                 ConfigureEditedTimeEntry(now);
                 ViewModel.Prepare(Id);

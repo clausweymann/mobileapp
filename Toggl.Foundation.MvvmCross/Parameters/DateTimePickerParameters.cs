@@ -4,9 +4,9 @@ using Toggl.Multivac;
 namespace Toggl.Foundation.MvvmCross.Parameters
 {
     [Preserve(AllMembers = true)]
-    public sealed class DatePickerParameters
+    public sealed class DateTimePickerParameters
     {
-        public PickerMode Mode { get; set; }
+        public DateTimePickerMode Mode { get; set; }
 
         public DateTimeOffset CurrentDate { get; set; }
 
@@ -14,20 +14,21 @@ namespace Toggl.Foundation.MvvmCross.Parameters
 
         public DateTimeOffset MaxDate { get; set; }
 
-        public static DatePickerParameters WithDates(PickerMode mode, DateTimeOffset current, DateTimeOffset min, DateTimeOffset max) =>
-            new DatePickerParameters
+        public static DateTimePickerParameters WithDates(DateTimePickerMode mode, DateTimeOffset current, DateTimeOffset min, DateTimeOffset max) =>
+            new DateTimePickerParameters
             {
                 Mode = mode,
                 CurrentDate = current,
                 MinDate = min,
                 MaxDate = max
             };
-
-        public enum PickerMode
-        {
-            Date,
-            Time,
-            DateTime
-        }
     }
+
+    public enum DateTimePickerMode
+    {
+        Date,
+        Time,
+        DateTime
+    }
+
 }
