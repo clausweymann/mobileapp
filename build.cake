@@ -267,6 +267,11 @@ Task("Build.Release.iOS.AppStore")
     .IsDependentOn("Nuget")
     .Does(BuildSolution("Release.AppStore", "", uploadSymbols: true));
 
+//Android Builds
+Task("Build.Release.Android.AdHoc")
+    .IsDependentOn("Nuget")
+    .Does(BuildSolution("Release.AdHoc.Giskard", ""));
+
 //Unit Tests
 Task("Tests.Unit")
     .IsDependentOn(buildAll ? "Build.Tests.All" : "Build.Tests.Unit")

@@ -40,6 +40,18 @@
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <AndroidSupportedAbis>armeabi-v7a;armeabi;x86_64</AndroidSupportedAbis>
     <OutputPath>..\bin</OutputPath>
+    <DefineConstants></DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release.PlayStore|AnyCPU' ">
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release.PlayStore</OutputPath>
+    <DefineConstants>USE_ANALYTICS;USE_PRODUCTION_API</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkSkip></AndroidLinkSkip>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <EnableProguard>false</EnableProguard>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <AndroidSupportedAbis>arm64-v8a;armeabi;armeabi-v7a;x86</AndroidSupportedAbis>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
