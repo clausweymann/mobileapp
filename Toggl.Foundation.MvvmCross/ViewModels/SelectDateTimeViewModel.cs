@@ -24,7 +24,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 var newValue = convert(value);
                 if (currentDateTime == newValue) return;
 
-                currentDateTime = newValue;
+                currentDateTime = newValue.Clamp(MinDate, MaxDate);
 
                 RaisePropertyChanged(nameof(CurrentDateTime));
             }
@@ -48,11 +48,6 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
             CloseCommand = new MvxAsyncCommand(close);
             SaveCommand = new MvxAsyncCommand(save);
-        }
-
-        private void OnCurrentDateTimeChanged()
-        {
-            CurrentDateTime = CurrentDateTime.Clamp(MinDate, MaxDate);
         }
 
         public override void Prepare(DateTimePickerParameters parameter)
