@@ -30,5 +30,4 @@ namespace Toggl.Foundation.MvvmCross.Parameters
         Time,
         DateTime
     }
-
 }
