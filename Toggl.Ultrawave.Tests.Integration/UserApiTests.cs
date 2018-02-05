@@ -293,6 +293,40 @@ namespace Toggl.Ultrawave.Tests.Integration
             }
         }
 
+        public class TheSignUpWithGoogleMethod : EndpointTestBase
+        {
+            private readonly ITogglApi unauthenticatedTogglApi;
+
+            public TheSignUpWithGoogleMethod()
+            {
+                unauthenticatedTogglApi = TogglApiWith(Credentials.None);
+            }
+
+            [Fact, LogTestInfo]
+            public void ThrowsIfTheGoogleTokenIsNull()
+            {
+                Action signingUp = () => unauthenticatedTogglApi
+                    .User
+                    .SignUpWithGoogle(null)
+                    .Wait();
+
+                signingUp.ShouldThrow<ArgumentException>();
+            }
+
+            [Fact, LogTestInfo]
+            public void FailsWhenTheGoogleTokenIsInvalid()
+            {
+                var notAToken = Guid.NewGuid().ToString();
+
+                Action signUp = () => unauthenticatedTogglApi
+                    .User
+                    .SignUpWithGoogle(notAToken)
+                    .Wait();
+
+                signUp.ShouldThrow<ServiceUnavailableException>();
+            }
+        }
+
         public sealed class TheUpdateMethod : AuthenticatedPutEndpointBaseTests<IUser>
         {
             [Fact, LogTestInfo]
