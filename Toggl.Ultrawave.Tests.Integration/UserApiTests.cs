@@ -326,6 +326,18 @@ namespace Toggl.Ultrawave.Tests.Integration
 
                 signUp.ShouldThrow<ServiceUnavailableException>();
             }
+
+            public void FailsWHenTheGoogleTokenParameterIsAnInvalidJWT()
+            {
+                var jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ";
+
+                Action signUp = () => unauthenticatedTogglApi
+                    .User
+                    .SignUpWithGoogle(jwt)
+                    .Wait();
+
+                signUp.ShouldThrow<ServiceUnavailableException>();
+            }
         }
 
         public sealed class TheUpdateMethod : AuthenticatedPutEndpointBaseTests<IUser>
