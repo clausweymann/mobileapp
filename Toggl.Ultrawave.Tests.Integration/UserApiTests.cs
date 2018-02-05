@@ -313,11 +313,12 @@ namespace Toggl.Ultrawave.Tests.Integration
                 signingUp.ShouldThrow<ArgumentException>();
             }
 
-            [Fact, LogTestInfo]
-            public void FailsWhenTheGoogleTokenIsInvalid()
+            [Theory, LogTestInfo]
+            [InlineData("")]
+            [InlineData("x.y.z")]
+            [InlineData("asdkjasdkhjdsadhkda")]
+            public void FailsWhenTheGoogleTokenIsParameterARandomString(string notAToken)
             {
-                var notAToken = Guid.NewGuid().ToString();
-
                 Action signUp = () => unauthenticatedTogglApi
                     .User
                     .SignUpWithGoogle(notAToken)
