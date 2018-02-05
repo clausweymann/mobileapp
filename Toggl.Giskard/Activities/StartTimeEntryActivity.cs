@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Graphics;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -25,6 +26,8 @@ namespace Toggl.Giskard.Activities
 
         protected override void OnCreate(Bundle bundle)
         {
+            this.ChangeStatusBarColor(Color.White, true);
+
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.StartTimeEntryActivity);
 
