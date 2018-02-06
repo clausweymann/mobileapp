@@ -248,6 +248,7 @@
     <Compile Include="Services\AnalyticsService.cs" />
     <Compile Include="Bindings\FabVisibilityTargetBinding.cs" />
     <Compile Include="Extensions\ActivityExtensions.cs" />
+    <Compile Include="Helper\ApiAvailability.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
