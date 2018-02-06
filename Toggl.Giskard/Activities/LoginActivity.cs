@@ -1,4 +1,5 @@
-﻿using Android.App;
+using Android.App;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
 using Android.Support.V7.Widget;
@@ -12,7 +13,10 @@ using static Android.Support.V7.Widget.Toolbar;
 namespace Toggl.Giskard.Activities
 {
     [MvxActivityPresentation]
-    [Activity(Theme = "@style/AppTheme", WindowSoftInputMode = SoftInput.AdjustResize)]
+    [Activity(Theme = "@style/AppTheme",
+              WindowSoftInputMode = SoftInput.AdjustResize,
+              ScreenOrientation = ScreenOrientation.Portrait,
+              ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize)]
     public sealed class LoginActivity : MvxAppCompatActivity<LoginViewModel>
     {
         protected override void OnCreate(Bundle bundle)

@@ -1,35 +1,19 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Firebase.Analytics;
 using Foundation;
 using Toggl.Foundation.Services;
 
 namespace Toggl.Daneel.Services
 {
-    public sealed class AnalyticsService : IAnalyticsService
+    public sealed class AnalyticsService : BaseAnalyticsService
     {
-        private static readonly NSString onboardingSkipEventName = new NSString("OnboardingSkip");
-        private static readonly NSString pageParameter = new NSString("PageWhenSkipWasClicked");
-
-        public void TrackOnboardingSkipEvent(string pageName)
+        protected override void NativeTrackEvent(string eventName, Dictionary<string, string> parameters)
         {
-            var dict = new NSDictionary<NSString, NSObject>(pageParameter, new NSString(pageName));
-            Analytics.LogEvent(onboardingSkipEventName, dict);
-        }
-
-        public void TrackCurrentPage(Type viewModelType)
-        {
-        }
-
-        public void TrackLoginEvent()
-        {
-        }
-
-        public void TrackNonFatalException(Exception ex)
-        {
-        }
-
-        public void TrackSignUpEvent()
-        {
+            Analytics.LogEvent(new NSString(eventName), NSDictionary<NSString, NSObject>.FromObjectsAndKeys(
+                parameters.Values.ToArray(),
+                parameters.Keys.ToArray()
+            ));
         }
     }
 }

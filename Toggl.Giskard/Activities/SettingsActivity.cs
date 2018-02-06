@@ -1,4 +1,5 @@
-﻿using Android.App;
+using Android.App;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
 using Android.Support.V7.Widget;
@@ -10,7 +11,9 @@ using Toggl.Giskard.Extensions;
 namespace Toggl.Giskard.Activities
 {
     [MvxActivityPresentation]
-    [Activity(Theme = "@style/AppTheme")]
+    [Activity(Theme = "@style/AppTheme",
+              ScreenOrientation = ScreenOrientation.Portrait,
+              ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize)]
     public sealed class SettingsActivity : MvxAppCompatActivity<SettingsViewModel>
     {
         protected override void OnCreate(Bundle bundle)

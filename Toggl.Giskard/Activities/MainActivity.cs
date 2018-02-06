@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
 using Android.Support.Design.Widget;
@@ -15,7 +16,9 @@ using static Toggl.Giskard.Extensions.CircularRevealAnimation.AnimationType;
 namespace Toggl.Giskard.Activities
 {
     [MvxActivityPresentation]
-    [Activity(Theme = "@style/AppTheme")]
+    [Activity(Theme = "@style/AppTheme",
+              ScreenOrientation = ScreenOrientation.Portrait,
+              ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize)]
     public sealed class MainActivity : MvxAppCompatActivity<MainViewModel>
     {
         private View runningEntryCardFrame;
