@@ -312,4 +312,13 @@ account is not set up</value>
     <data name="NoEmailErrorMessage">
         <value>Go to “Settings > Mail > Add Account” to set up an email account or send us your feedback to support@toggl.com</value>
     </data>
+    <data name="SelectTime">
+        <value>Select time</value>
+    </data>
+    <data name="SelectDate">
+        <value>Select date</value>
+    </data>
+    <data name="SelectDateTime">
+        <value>Select date and time</value>
+    </data>
 </root>

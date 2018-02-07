@@ -622,5 +622,23 @@ namespace Toggl.Foundation {
                 return ResourceManager.GetString("NoEmailErrorMessage", resourceCulture);
             }
         }
+        
+        public static string SelectTime {
+            get {
+                return ResourceManager.GetString("SelectTime", resourceCulture);
+            }
+        }
+        
+        public static string SelectDate {
+            get {
+                return ResourceManager.GetString("SelectDate", resourceCulture);
+            }
+        }
+        
+        public static string SelectDateTime {
+            get {
+                return ResourceManager.GetString("SelectDateTime", resourceCulture);
+            }
+        }
     }
 }

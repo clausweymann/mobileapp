@@ -4,6 +4,7 @@ using MvvmCross.Binding.BindingContext;
 using MvvmCross.iOS.Views;
 using Toggl.Daneel.Extensions;
 using Toggl.Daneel.Presentation.Attributes;
+using Toggl.Foundation;
 using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using UIKit;
@@ -24,6 +25,9 @@ namespace Toggl.Daneel.ViewControllers
             prepareDatePicker();
 
             var bindingSet = this.CreateBindingSet<SelectDateTimeViewController, SelectDateTimeViewModel>();
+
+            //Title
+            TitleLabel.Text = selectCorrectTitle(ViewModel.Mode);
 
             //Dates
             DatePicker.MinimumDate = ViewModel.MinDate.ToNSDate();
@@ -62,10 +66,21 @@ namespace Toggl.Daneel.ViewControllers
                     return UIDatePickerMode.Date;
                 case DateTimePickerMode.Time:
                     return UIDatePickerMode.Time;
-                case DateTimePickerMode.DateTime:
-                    return UIDatePickerMode.DateAndTime;
                 default:
                     return UIDatePickerMode.DateAndTime;
+            }
+        }
+
+        private string selectCorrectTitle(DateTimePickerMode mode)
+        {
+            switch (mode)
+            {
+                case DateTimePickerMode.Date:
+                    return Resources.SelectDate;
+                case DateTimePickerMode.Time:
+                    return Resources.SelectTime;
+                default:
+                    return Resources.SelectDateTime;
             }
         }
     }
