@@ -2,7 +2,7 @@
 using System.Linq;
 using Firebase.Analytics;
 using Foundation;
-using Toggl.Foundation.Services;
+using Toggl.Foundation.Analytics;
 
 namespace Toggl.Daneel.Services
 {

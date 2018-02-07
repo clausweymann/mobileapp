@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Toggl.Foundation.Services;
+using Toggl.Foundation.Analytics;
 
 namespace Toggl.Giskard.Services
 {
