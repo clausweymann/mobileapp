@@ -23,8 +23,6 @@ namespace Toggl.Daneel.ViewControllers
     {
         private const float nonScrollableContentHeight = 116f;
 
-        private EditTimeEntryErrorView syncErrorMessageView;
-
         public EditTimeEntryViewController() : base(nameof(EditTimeEntryViewController), null)
         {
         }
@@ -34,22 +32,6 @@ namespace Toggl.Daneel.ViewControllers
             base.ViewDidLoad();
 
             prepareViews();
-
-            if (PresentationController is ModalPresentationController modalPresentationController)
-            {
-                syncErrorMessageView = EditTimeEntryErrorView.Create();
-                var contentView = modalPresentationController.AdditionalContentView;
-
-                contentView.AddSubview(syncErrorMessageView);
-
-                syncErrorMessageView.TranslatesAutoresizingMaskIntoConstraints = false;
-                syncErrorMessageView.TopAnchor
-                    .ConstraintEqualTo(contentView.TopAnchor, 28).Active = true;
-                syncErrorMessageView.LeadingAnchor
-                    .ConstraintEqualTo(contentView.LeadingAnchor, 8).Active = true;
-                syncErrorMessageView.TrailingAnchor
-                    .ConstraintEqualTo(contentView.TrailingAnchor, -8).Active = true;
-            }
 
             var durationConverter = new TimeSpanToDurationWithUnitValueConverter();
             var dateConverter = new DateToTitleStringValueConverter();
@@ -67,25 +49,6 @@ namespace Toggl.Daneel.ViewControllers
 
             var bindingSet = this.CreateBindingSet<EditTimeEntryViewController, EditTimeEntryViewModel>();
 
-            if (syncErrorMessageView != null)
-            {
-                bindingSet.Bind(syncErrorMessageView)
-                          .For(v => v.Text)
-                          .To(vm => vm.SyncErrorMessage);
-
-                bindingSet.Bind(syncErrorMessageView)
-                          .For(v => v.BindTap())
-                          .To(vm => vm.DismissSyncErrorMessageCommand);
-
-                bindingSet.Bind(syncErrorMessageView)
-                          .For(v => v.CloseCommand)
-                          .To(vm => vm.DismissSyncErrorMessageCommand);
-
-                bindingSet.Bind(syncErrorMessageView)
-                          .For(v => v.BindVisible())
-                          .To(vm => vm.SyncErrorMessageVisible)
-                          .WithConversion(inverterVisibilityConverter);
-            }
 
             //Text
             bindingSet.Bind(DescriptionTextView)
