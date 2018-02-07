@@ -56,6 +56,12 @@ namespace Toggl.Daneel.ViewControllers
 		UIKit.UIView EndTimeView { get; set; }
 
 		[Outlet]
+		UIKit.UILabel ErrorMessageLabel { get; set; }
+
+		[Outlet]
+		UIKit.UIView ErrorView { get; set; }
+
+		[Outlet]
 		UIKit.UILabel ProjectTaskClientLabel { get; set; }
 
 		[Outlet]
@@ -64,7 +70,7 @@ namespace Toggl.Daneel.ViewControllers
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
-		UIKit.UIView ScrollViewContent { get; set; }
+		UIKit.UIStackView ScrollViewContent { get; set; }
 
 		[Outlet]
 		UIKit.UILabel StartDateLabel { get; set; }
@@ -159,6 +165,16 @@ namespace Toggl.Daneel.ViewControllers
 			if (ScrollViewContent != null) {
 				ScrollViewContent.Dispose ();
 				ScrollViewContent = null;
+			if (ErrorMessageLabel != null) {
+				ErrorMessageLabel.Dispose ();
+				ErrorMessageLabel = null;
+			}
+
+			if (ErrorView != null) {
+				ErrorView.Dispose ();
+				ErrorView = null;
+			}
+
 			}
 
 			if (StartDateLabel != null) {
