@@ -2,7 +2,7 @@
 {
     public enum TimeEntryStartOrigin
     {
-        PlayButton,
+        Main,
         Continue,
         Suggestion
     }

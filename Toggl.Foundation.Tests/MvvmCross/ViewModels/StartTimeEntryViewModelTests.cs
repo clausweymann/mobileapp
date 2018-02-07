@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FsCheck.Xunit;
 using NSubstitute;
+using Toggl.Foundation.Analytics;
 using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.Autocomplete.Suggestions;
 using Toggl.Foundation.DTOs;
@@ -59,23 +60,28 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
             }
 
             protected override StartTimeEntryViewModel CreateViewModel()
-                => new StartTimeEntryViewModel(TimeService, DialogService, DataSource, NavigationService);
+                => new StartTimeEntryViewModel(TimeService, DataSource, DialogService, AnalyticsService, NavigationService);
         }
 
         public sealed class TheConstructor : StartTimeEntryViewModelTest
         {
             [Theory, LogIfTooSlow]
-            [ClassData(typeof(FourParameterConstructorTestData))]
+            [ClassData(typeof(FiveParameterConstructorTestData))]
             public void ThrowsIfAnyOfTheArgumentsIsNull(
-                bool useDataSource, bool useTimeService, bool useDialogService, bool useNavigationService)
+                bool useDataSource, 
+                bool useTimeService, 
+                bool useDialogService, 
+                bool useAnalyticsService,
+                bool useNavigationService)
             {
                 var dataSource = useDataSource ? DataSource : null;
                 var timeService = useTimeService ? TimeService : null;
                 var dialogService = useDialogService ? DialogService : null;
+                var analyticsService = useAnalyticsService ? AnalyticsService : null;
                 var navigationService = useNavigationService ? NavigationService : null;
 
                 Action tryingToConstructWithEmptyParameters =
-                    () => new StartTimeEntryViewModel(timeService, dialogService, dataSource, navigationService);
+                    () => new StartTimeEntryViewModel(timeService, dataSource, dialogService, analyticsService, navigationService);
 
                 tryingToConstructWithEmptyParameters
                     .ShouldThrow<ArgumentNullException>();
@@ -1158,6 +1164,17 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
                     ViewModel.DoneCommand.ExecuteAsync().Wait();
 
                     DataSource.TimeEntries.Received().Start(Arg.Is<StartTimeEntryDTO>(dto => dto.Duration.HasValue == false));
+                }
+
+                [Fact]
+                public void RegistersTheEventInTheAnalyticsService()
+                {
+                    var parameter = new StartTimeEntryParameters(DateTimeOffset.Now, "", null);
+
+                    ViewModel.Prepare(parameter);
+                    ViewModel.DoneCommand.ExecuteAsync().Wait();
+
+                    AnalyticsService.Received().TrackStartedTimeEntry(TimeEntryStartOrigin.Main);
                 }
 
                 private TagSuggestion tagSuggestionFromInt(int i)

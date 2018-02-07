@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
-using Toggl.Foundation.Analytics;
 using Toggl.Foundation.Login;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using Toggl.Foundation.Tests.Generators;
@@ -14,8 +13,6 @@ namespace Toggl.Foundation.Tests.MvvmCross.ViewModels
     {
         public abstract class OnboardingViewModelTest : BaseViewModelTests<OnboardingViewModel>
         {
-            protected IAnalyticsService AnalyticsService { get; } = Substitute.For<IAnalyticsService>();
-
             protected override OnboardingViewModel CreateViewModel()
                 => new OnboardingViewModel(NavigationService, OnboardingStorage, AnalyticsService);
         }
