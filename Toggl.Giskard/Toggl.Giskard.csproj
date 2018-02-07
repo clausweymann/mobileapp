@@ -247,6 +247,9 @@
     <Compile Include="Bindings\FabVisibilityTargetBinding.cs" />
     <Compile Include="Activities\EditProjectActivity.cs" />
     <Compile Include="Adapters\CreateSuggestionSegmentedRecyclerAdapter.cs" />
+    <Compile Include="Adapters\SelectClientRecyclerAdapter.cs" />
+    <Compile Include="TemplateSelectors\SelectClientTemplateSelector.cs" />
+    <Compile Include="Views\SelectClientRecyclerView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -280,6 +283,11 @@
     <AndroidResource Include="Resources\drawable-xhdpi\workspace.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\workspace.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\workspace.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\check.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\check.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\check.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\check.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\check.png" />
     <AndroidResource Include="Resources\drawable-hdpi\client.png" />
     <AndroidResource Include="Resources\drawable-mdpi\client.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\client.png" />
