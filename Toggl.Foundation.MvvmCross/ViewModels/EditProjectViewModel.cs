@@ -198,7 +198,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
         
         private async Task pickClient()
         {
-            var selectedClientId = await navigationService.Navigate<SelectClientViewModel, long, long?>(workspaceId);
+            var parameter = SelectClientParameters.WithIds(workspaceId, clientId);
+            var selectedClientId = 
+                await navigationService.Navigate<SelectClientViewModel, SelectClientParameters, long?>(parameter);
             if (selectedClientId == null) return;
 
             if (selectedClientId.Value == 0)
