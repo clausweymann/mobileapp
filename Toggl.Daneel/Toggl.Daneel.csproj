@@ -423,6 +423,10 @@
     <ImageAsset Include="Resources\Images.xcassets\date.imageset\date.png" />
     <ImageAsset Include="Resources\Images.xcassets\date.imageset\date%402x.png" />
     <ImageAsset Include="Resources\Images.xcassets\date.imageset\date%403x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icErrorEdit.imageset\Contents.json" />
+    <ImageAsset Include="Resources\Images.xcassets\icErrorEdit.imageset\icErrorEdit.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icErrorEdit.imageset\icErrorEdit%402x.png" />
+    <ImageAsset Include="Resources\Images.xcassets\icErrorEdit.imageset\icErrorEdit%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
