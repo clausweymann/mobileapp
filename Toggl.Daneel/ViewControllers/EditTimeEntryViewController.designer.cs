@@ -165,6 +165,8 @@ namespace Toggl.Daneel.ViewControllers
 			if (ScrollViewContent != null) {
 				ScrollViewContent.Dispose ();
 				ScrollViewContent = null;
+			}
+
 			if (ErrorMessageLabel != null) {
 				ErrorMessageLabel.Dispose ();
 				ErrorMessageLabel = null;
@@ -173,8 +175,6 @@ namespace Toggl.Daneel.ViewControllers
 			if (ErrorView != null) {
 				ErrorView.Dispose ();
 				ErrorView = null;
-			}
-
 			}
 
 			if (StartDateLabel != null) {
