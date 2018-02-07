@@ -6,6 +6,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
+using Toggl.Foundation.Analytics;
 using Toggl.Foundation.Autocomplete;
 using Toggl.Foundation.Autocomplete.Suggestions;
 using Toggl.Foundation.DataSources;
@@ -25,8 +26,9 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
     {
         //Fields
         private readonly ITimeService timeService;
-        private readonly IDialogService dialogService;
         private readonly ITogglDataSource dataSource;
+        private readonly IDialogService dialogService;
+        private readonly IAnalyticsService analyticsService;
         private readonly IMvxNavigationService navigationService;
         private readonly Subject<TextFieldInfo> infoSubject = new Subject<TextFieldInfo>();
         private readonly Subject<AutocompleteSuggestionType> queryByTypeSubject = new Subject<AutocompleteSuggestionType>();
@@ -155,18 +157,21 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
 
         public StartTimeEntryViewModel(
             ITimeService timeService,
-            IDialogService dialogService,
             ITogglDataSource dataSource,
+            IDialogService dialogService,
+            IAnalyticsService analyticsService,
             IMvxNavigationService navigationService)
         {
             Ensure.Argument.IsNotNull(dataSource, nameof(dataSource));
             Ensure.Argument.IsNotNull(timeService, nameof(timeService));
             Ensure.Argument.IsNotNull(dialogService, nameof(dialogService));
+            Ensure.Argument.IsNotNull(analyticsService, nameof(analyticsService));
             Ensure.Argument.IsNotNull(navigationService, nameof(navigationService));
 
             this.dataSource = dataSource;
             this.timeService = timeService;
             this.dialogService = dialogService;
+            this.analyticsService = analyticsService;
             this.navigationService = navigationService;
 
             BackCommand = new MvxAsyncCommand(back);
@@ -544,6 +549,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
                 .SelectMany(dataSource.TimeEntries.Start)
                 .Do(_ => dataSource.SyncManager.PushSync());
 
+            analyticsService.TrackStartedTimeEntry(TimeEntryStartOrigin.Main);
             await navigationService.Close(this);
         }
 
