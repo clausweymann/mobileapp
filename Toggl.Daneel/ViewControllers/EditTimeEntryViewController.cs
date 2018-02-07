@@ -49,6 +49,19 @@ namespace Toggl.Daneel.ViewControllers
 
             var bindingSet = this.CreateBindingSet<EditTimeEntryViewController, EditTimeEntryViewModel>();
 
+            //Error message view
+            bindingSet.Bind(ErrorMessageLabel)
+                      .For(v => v.Text)
+                      .To(vm => vm.SyncErrorMessage);
+
+            bindingSet.Bind(ErrorView)
+                      .For(v => v.BindTap())
+                      .To(vm => vm.DismissSyncErrorMessageCommand);
+
+            bindingSet.Bind(ErrorView)
+                      .For(v => v.BindVisible())
+                      .To(vm => vm.SyncErrorMessageVisible)
+                      .WithConversion(inverterVisibilityConverter);
 
             //Text
             bindingSet.Bind(DescriptionTextView)
