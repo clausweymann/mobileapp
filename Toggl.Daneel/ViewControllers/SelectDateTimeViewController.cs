@@ -4,6 +4,7 @@ using MvvmCross.Binding.BindingContext;
 using MvvmCross.iOS.Views;
 using Toggl.Daneel.Extensions;
 using Toggl.Daneel.Presentation.Attributes;
+using Toggl.Foundation.MvvmCross.Parameters;
 using Toggl.Foundation.MvvmCross.ViewModels;
 using UIKit;
 
@@ -50,7 +51,22 @@ namespace Toggl.Daneel.ViewControllers
             };
 
             DatePicker.Locale = NSLocale.CurrentLocale;
-            DatePicker.Mode = UIDatePickerMode.Date;
+            DatePicker.Mode = selectMode(ViewModel.Mode);
+        }
+
+        private UIDatePickerMode selectMode(DateTimePickerMode mode)
+        {
+            switch (mode)
+            {
+                case DateTimePickerMode.Date:
+                    return UIDatePickerMode.Date;
+                case DateTimePickerMode.Time:
+                    return UIDatePickerMode.Time;
+                case DateTimePickerMode.DateTime:
+                    return UIDatePickerMode.DateAndTime;
+                default:
+                    return UIDatePickerMode.DateAndTime;
+            }
         }
     }
 }
