@@ -489,6 +489,8 @@
     <AndroidResource Include="Resources\layout\EditProjectActivity.axml" />
     <AndroidResource Include="Resources\layout\SelectTagsActivityCell.axml" />
     <AndroidResource Include="Resources\layout\AbcCreateEntityCell.axml" />
+    <AndroidResource Include="Resources\layout\SelectClientActivity.axml" />
+    <AndroidResource Include="Resources\layout\SelectClientActivityCell.axml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toggl.Foundation\Toggl.Foundation.csproj">

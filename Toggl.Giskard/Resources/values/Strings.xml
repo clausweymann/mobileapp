@@ -11,8 +11,10 @@
     <string name="StartTimeEntryHint">What are you working on?</string>
     <string name="PrivateProject">Private project</string>
     <string name="PrivateProjectHint">Private projects are only accessible\nto project members</string>
+    <string name="AddClientHint">Add/filter clients</string>
 
     <string name="SuggestionsTemplateSelector" translatable="false">Toggl.Giskard.TemplateSelectors.SuggestionsTemplateSelector, Toggl.Giskard</string>
+    <string name="SelectClientTemplateSelector" translatable="false">Toggl.Giskard.TemplateSelectors.SelectClientTemplateSelector, Toggl.Giskard</string>
     <string name="TimeEntriesLogTemplateSelector" translatable="false">Toggl.Giskard.TemplateSelectors.TimeEntriesLogTemplateSelector, Toggl.Giskard</string>
     <string name="StartTimeEntrySuggestionsTemplateSelector" translatable="false">Toggl.Giskard.TemplateSelectors.StartTimeEntrySuggestionsTemplateSelector, Toggl.Giskard</string>
 </resources>
