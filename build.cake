@@ -83,6 +83,28 @@ private string GetCommitHash()
     return redirectedOutput.Last();
 }
 
+private TemporaryFileTransformation GetAndroidProjectConfigurationTransformation()
+{
+    const string path = "Toggl.Giskard/Toggl.Giskard.csproj";
+    var keyStore = EnvironmentVariable("BITRISEIO_ANDROID_KEYSTORE_URL");
+    var storePass = EnvironmentVariable("BITRISEIO_ANDROID_KEYSTORE_PASSWORD");
+    var keyAlias = EnvironmentVariable("BITRISEIO_ANDROID_KEYSTORE_ALIAS");
+    var keyPass = EnvironmentVariable("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD");
+
+    var filePath = GetFiles(path).Single();
+    var file = TransformTextFile(filePath).ToString();
+
+    return new TemporaryFileTransformation
+    {
+        Path = path,
+        Original = file,
+        Temporary = file.Replace("{KEYSTORE_URL}", keyStore)
+                        .Replace("{KEYSTORE_PASSWORD}", storePass)
+                        .Replace("{KEYSTORE_ALIAS}", keyAlias)
+                        .Replace("{KEYSTORE_ALIAS_PASSWORD}", keyPass)
+    };
+}
+
 private TemporaryFileTransformation GetIosAnalyticsServicesConfigurationTransformation()
 {
     const string path = "Toggl.Daneel/GoogleService-Info.plist";
@@ -184,7 +206,8 @@ var transformations = new List<TemporaryFileTransformation>
     GetIosCrashConfigurationTransformation(),
     GetDroidCrashConfigurationTransformation(),
     GetIntegrationTestsConfigurationTransformation(),
-    GetIosAnalyticsServicesConfigurationTransformation()
+    GetIosAnalyticsServicesConfigurationTransformation(),
+    GetAndroidProjectConfigurationTransformation()
 };
 
 private string[] GetUnitTestProjects() => new []

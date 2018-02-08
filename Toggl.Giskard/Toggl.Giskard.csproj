@@ -41,6 +41,11 @@
     <AndroidSupportedAbis>armeabi-v7a;armeabi;x86_64</AndroidSupportedAbis>
     <OutputPath>..\bin</OutputPath>
     <DefineConstants></DefineConstants>
+    <AndroidKeyStore>True</AndroidKeyStore>
+    <AndroidSigningKeyStore>{KEYSTORE_URL}</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>{KEYSTORE_PASSWORD}</AndroidSigningStorePass>
+    <AndroidSigningKeyAlias>{KEYSTORE_ALIAS}</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>{KEYSTORE_ALIAS_PASSWORD}</AndroidSigningKeyPass>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release.PlayStore|AnyCPU' ">
     <Optimize>false</Optimize>
