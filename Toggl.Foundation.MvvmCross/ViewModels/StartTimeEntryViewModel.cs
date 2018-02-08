@@ -477,7 +477,7 @@ namespace Toggl.Foundation.MvvmCross.ViewModels
             {
                 Duration = selectedDuration.Duration;
                 displayedTime = selectedDuration.Duration.Value;
-                elapsedTimeDisposable.Dispose();
+                elapsedTimeDisposable?.Dispose();
                 RaisePropertyChanged(nameof(DisplayedTime));
             }
 
